@@ -32,16 +32,16 @@
 #   est           Starting estimate in dB
 #   instRange     Dynamic range of the instrument c(min,max) in dB
 #   verbose       True if you want each presentation printed
-#   responder     A function that takes a dB value and numPresentations 
-#                 and returns TRUE (seen) or FALSE (not seen)
-#   ...           Extra parameters to pass to the responder function
+#   makeStim      A helper function to create the required
+#                 OPI data type for passing to opiPresent
+#   ...           Parameters for makeStim
 # Returns a list containing
 #   npres    Total number of presentations
 #   respSeq  Response sequence stored as a list of (seen,dB) pairs
 #   first    First staircase estimate in dB
 #   final    Final threshold estimate in dB
 ################################################################################
-FT <- function(est=25, instRange=c(0,40), verbose=FALSE, responder, ...) {
+FT <- function(est=25, instRange=c(0,40), verbose=FALSE, makeStim, ...) {
     #
     # Do a single 4-2 staircase beginning at startEstimate
     # and stopping after 2 reversals, or if min/max not/seen twice.
@@ -58,7 +58,10 @@ FT <- function(est=25, instRange=c(0,40), verbose=FALSE, responder, ...) {
 
         currentEst <- startEstimate
         while (numRevs < 2 && numNotSeenMin < 2 && numSeenMax < 2) { 
-            resp  <- responder(currentEst, numPres, ...)  
+            opiResp <- opiPresent(makeStim(currentEst, numPres), ...)
+            while (!is.null(opiResp$err))
+                opiResp <- opiPresent(makeStim(currentEst, numPres), ...)
+            resp <- opiResp$seen
             numPres <- numPres + 1
             
             if (verbose) {

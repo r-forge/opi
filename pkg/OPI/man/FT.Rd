@@ -10,7 +10,7 @@ FT begins with a 4-2dB staircase at level est. If the final estimate
 completed beginning at the estimate returned from the first.
 }
 \usage{
-FT(est = 25, instRange = c(0, 40), verbose = FALSE, responder, ...)
+FT(est = 25, instRange = c(0, 40), verbose = FALSE, makeStim, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -22,12 +22,12 @@ Dynamic range of the instrument c(min,max) in dB
   \item{verbose}{
 True if you want each presentation printed
 }
-  \item{responder}{
+  \item{makeStim}{
 A function that takes a dB value and numPresentations 
-and returns TRUE (seen) or FALSE (not seen)
+and returns an OPI datatype ready for passing to opiPresent
 }
   \item{\dots}{
-Extra parameters to pass to the responder function
+Extra parameters to pass to the opiPresent function
 }
 }
 \details{
@@ -53,6 +53,7 @@ Andrew Turpin <aturpin@unimelb.edu.au>
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
+\code{\link{dbTocd}}, \code{\link{opiPresent}}
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
@@ -61,18 +62,18 @@ Andrew Turpin <aturpin@unimelb.edu.au>
 ##--	or do  help(data=index)  for the standard data sets.
 
 
-responder <- function(db, n) { return (db < 30) }
-result <- FT(responder=responder)
+    # Stimulus is Size III white-on-white as in the HFA
+makeStim <- function(db, n) { 
+    s <- list(x=9, y=9, level=dbTocd(db), size=0.43, color="white",
+             duration=200, responseWindow=1500)
+    class(s) <- "opiStaticStimulus"
 
-    ## a more complicated responder
-rHenson <- function(db, n, tt=30, fpr=0.03, fnr=0.03) {
-    pxVar <- min(6, exp(-0.066*tt +2.81))  
-    prSeeing <- fpr + (1-fpr-fnr)*(1-pnorm(db, mean=tt, sd=pxVar))  
-    return (runif(1) < prSeeing)
+    return(s)
 }
-res1 <- FT(responder=rHenson, tt=30, fpr=0.05, fnr=0.05)
-res2 <- FT(responder=rHenson, tt=22, fpr=0.15, fnr=0.15)
-
+chooseOpi("SimHenson")
+opiInitialize()
+result <- FT(makeStim=makeStim, tt=30, fpr=0.15, fnr=0.01)
+opiClose()
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
