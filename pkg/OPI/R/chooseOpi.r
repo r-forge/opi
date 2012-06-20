@@ -22,21 +22,30 @@
 
 ################################################################################
 # Input parameters
-#   opi           Either "Octopus900", "HEP", "SimHenson"
+#   opi      Either "Octopus900", "HEP", "SimHenson"
+#   type     For SimHenson type=N|G|C for Normal, Glaucoma, Combined
 # Returns
 #   TRUE     If successful
 #   FALSE    Otherwise
 ################################################################################
-chooseOpi <- function(opi="SimHenson") {
+chooseOpi <- function(opi="SimHenson", type="N") {
     if (opi == "Octopus900") {
         stop("Have not implemented chooseOPI(Octopus900)")
     } else if (opi == "HEP") {
         stop("Have not implemented chooseOPI(HEP)")
     } else if (opi == "SimHenson") {
         .GlobalEnv$opiInitialize    <- simH.opiInitialize
-        .GlobalEnv$opiPresent       <- simH.opiPresent
         .GlobalEnv$opiClose         <- simH.opiClose
         .GlobalEnv$opiSetBackground <- simH.opiSetBackground
         .GlobalEnv$opiQueryDevice   <- simH.opiQueryDevice
+        if (type == "N") {
+            .GlobalEnv$opiPresent <- simH.opiPresent.N
+        } else if (type == "G") {
+            .GlobalEnv$opiPresent <- simH.opiPresent.G
+        } else if (type == "C") {
+            .GlobalEnv$opiPresent <- simH.opiPresent.C
+        } else {
+            stop("Bad type specified for SimHenson in chooseOpi()")
+        }
     }
 }

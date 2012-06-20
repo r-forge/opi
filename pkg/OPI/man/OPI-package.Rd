@@ -19,11 +19,11 @@ License: \tab GPL-3\cr
 Currently only contains FT().
 }
 \author{
-Andrew Turpin
-
+Andrew Turpin <aturpin@unimelb.edu.au>
 Maintainer: Andrew Turpin <aturpin@unimelb.edu.au>
 }
 \references{
+http://perimetry.org/OPI
 }
 \keyword{ package }
 \seealso{

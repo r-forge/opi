@@ -42,6 +42,8 @@ Returns a list containing
 }
 \references{
 %% ~put references to the literature/web site here ~
+http://perimetry.org/OPI
+
 }
 \author{
 Andrew Turpin <aturpin@unimelb.edu.au>
@@ -54,7 +56,6 @@ Andrew Turpin <aturpin@unimelb.edu.au>
 
 \seealso{
 \code{\link{dbTocd}}, \code{\link{opiPresent}}
-%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----

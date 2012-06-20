@@ -58,9 +58,9 @@ FT <- function(est=25, instRange=c(0,40), verbose=FALSE, makeStim, ...) {
 
         currentEst <- startEstimate
         while (numRevs < 2 && numNotSeenMin < 2 && numSeenMax < 2) { 
-            opiResp <- opiPresent(makeStim(currentEst, numPres), ...)
+            opiResp <- opiPresent(makeStim(currentEst, numPres), nextStim=NULL, ...)
             while (!is.null(opiResp$err))
-                opiResp <- opiPresent(makeStim(currentEst, numPres), ...)
+                opiResp <- opiPresent(makeStim(currentEst, numPres), nextStim=NULL, ...)
             resp <- opiResp$seen
             numPres <- numPres + 1
             
