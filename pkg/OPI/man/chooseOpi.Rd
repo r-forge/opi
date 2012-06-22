@@ -8,7 +8,7 @@ Choose an implementation of the OPI.
 Chooses an implementation of the OPI to use.
 }
 \usage{
-chooseOpi(opi = "SimHenson", type = "N")
+chooseOpi(opi = "SimHenson", type = "N", cap=6)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -21,7 +21,12 @@ chooseOpi(opi = "SimHenson", type = "N")
 }
   \item{type}{
     An extra controlling parameter that can be used to subspecialise 
-    your machine.
+    your machine. 
+    }
+  \item{cap}{
+    When \code{opi="SimHenson"}, \code{cap} sets the maximum 
+    standard deviation that can be derived from Henson et al's formula
+    for determing FoS/psychometric function slope.
     }
 }
 \details{ 
@@ -31,7 +36,7 @@ chooseOpi(opi = "SimHenson", type = "N")
     \code{"G"}, which uses the equation for glaucoma variability; and
     \code{"C"}, which uses the equation for combined variability.
 }
-\value{ }
+\value{ Returns nothing.}
 
 \references{
 David B. Henson, Shaila Chaudry, Paul H. Artes, E. Brian Faragher, and
@@ -48,14 +53,14 @@ http://perimetry.org/OPI
 Andrew Turpin <aturpin@unimelb.edu.au>
 }
 
-\note{ }
+%\note{ }
 
 \examples{
 ##---- Should be DIRECTLY executable !! ----
 ##-- ==>  Define data, use random,
 ##--	or do  help(data=index)  for the standard data sets.
 
-    chooseOpi("SimHenson", type="C")
+    chooseOpi("SimHenson", type="C", cap=6)
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

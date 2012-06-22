@@ -1,1 +1,10 @@
-exportPattern("^[[:alpha:]]+")
+
+#exportPattern("^[[:alpha:]]+")
+
+export(FT)
+export(chooseOpi)
+export(dbTocd, cdTodb)
+
+S3method(simH.opiPresent, opiStaticStimulus)
+S3method(simH.opiPresent, opiKineticStimulus)
+S3method(simH.opiPresent, opiTemporalStimulus)

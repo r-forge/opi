@@ -16,8 +16,8 @@ dbTocd(db)
     Value to convert in Humphrey dB
 }
 }
-\details{
-}
+%\details{
+%}
 \value{
 Returns cd/\eqn{m^2}{m^2} value.
 }
@@ -28,8 +28,8 @@ http://perimetry.org/OPI
 \author{
 Andrew Turpin <aturpin@unimelb.edu.au>
 }
-\note{
-}
+%\note{
+%}
 
 \seealso{
 \code{\link{cdTodb}}

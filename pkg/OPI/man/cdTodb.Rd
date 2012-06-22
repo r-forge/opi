@@ -16,8 +16,8 @@ cdTodb(cd)
 Value to convert in cd/\eqn{m^2}{m^2}
 }
 }
-\details{
-}
+%\details{
+%}
 \value{
 Returns dB value.
 }
@@ -27,13 +27,13 @@ http://perimetry.org/OPI
 \author{
 Andrew Turpin <aturpin@unimelb.edu.au>
 }
-\note{
-}
+%\note{
+%}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{dbTocd}}, ~~~
+\code{\link{dbTocd}}
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----

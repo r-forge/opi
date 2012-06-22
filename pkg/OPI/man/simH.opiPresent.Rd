@@ -1,88 +1,81 @@
-\name{opiPresent}
-\alias{opiPresent}
+\name{simH.opiPresent}
+\alias{simH.opiPresent}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Use OPI to present stimulus.
+opiPresent for a simulated patient Henson et al variability.
 }
 \description{
-Generic function for presentation of stimulus stim. 
-Depending on your choice of OPI implementation set using 
-\code{chooseOPI()}, 
-different \code{opiPresent} methods will be called. 
-Use \code{methods(opiPresent)} to list the current.
+The response to a stimuli is determined by sampling from a
+Frequency-of-Seeing (FoS) curve defined as in Henson et al (2000).
 }
 \usage{
-opiPresent(stim, nextStim=NULL, ...)
+simH.opiPresent(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{stim}{
-    A list of class \code{opiStaticStimulus}, \code{opiKineticStimulus}, or
-\code{opiTemporalStimulus}. 
+    An OPI stimulus object.
 }
   \item{nextStim}{
-    As for \code{stim}, but the next presentation to be made. 
-    This might be useful
-    on some machines, particularly projector based systems, where preparations
-    for the next presentation can be made while waiting for a response to the
-    current.
+    An OPI stimulus object, default is NULL.
 }
-  \item{\dots}{
-    Parameters specific to your chosen opi implementation.
-}
+    \item{fpr}{The false positive rate in [0,1].}
+    \item{fnr}{The false positive rate in [0,1].}
+    \item{tt}{The true threshold in Humphrey dB.}
 }
 \details{
-\code{opiPresent} 
-is blocking in that it will not return until either a response
-is obtained, or at least the responseWindow milliseconds has expired. (Note
-that more time might have expired.) Specifying \code{nextStim} 
-allows the implementing
-machine to use the time waiting for a 
-response to \code{stim} to make preparations
-for the next stimuli. (For example retargeting the projector or moving
-aperture and/or filter wheels.) 
-There is no guarantee that the next call to
-\code{opiPresent} will have \code{nextStim} as the first argument; this 
-should be checked by the machine specific implementations.
+The response to a stimuli is determined by sampling from a
+Frequency-of-Seeing (FoS) curve (also known as the psychometric
+function) with formula \code{fpr+(1-fpr-fnr)*(1-pnorm(x, tt, pxVar))},
+where \code{x} is the stimulus value in Humphrey dB, and pxVar is
+\code{min(simH.cap, exp(A*tt + B))}. The ceiling \code{simH.cap}
+is set with the call to \code{chooseOpi}, and \code{A} and \code{B}
+are from Table 1 in Henson et al (2000). Which values are used is
+determined by \code{simH.type} which is also set in the call to
+\code{chooseOpi}.
+
 }
 \value{
-A list containing
-\item{err }{\code{NULL} if no error occurred, otherwise a machine specific error
-message.
-This should include errors when the specified size cannot be achieved by
-the device (for example, in a projection system with an aperture wheel of
-predefined sizes.) If \code{stim} is \code{NULL}, then \code{err} contains the status of the
-machine.}
-\item{seen }{\code{TRUE} if a response was detected in the allowed
-\code{responseWindow}, \code{FALSE} otherwise.}
-\item{time}{The time in milliseconds from the onset (or offset, machine
-specific) of the presentation
-until the response from the subject if \code{seen} is \code{TRUE}. 
-If \code{seen} is \code{FALSE}, this
-value is undefined.
-}
+    As for \code{\link{opiPresent}}.
 }
 \references{
+David B. Henson, Shaila Chaudry, Paul H. Artes, E. Brian Faragher, and
+Alec Ansons.  
+Response Variability in the Visual Field: Comparison of Optic Neuritis,
+Glaucoma, Ocular Hypertension, and Normal Eyes.
+Investigative Ophthalmology & Visual Science, February 2000, Vol. 41(2).
+
 http://perimetry.org/OPI
 }
 \author{
-Andrew Tuprin <aturpin@unimelb.edu.au>
-}
-\note{
-%%  ~~further notes~~
+Andrew Turpin <aturpin@unimelb.edu.au>
 }
 
 \seealso{
-\code{\link{opiStaticStimulus}}, 
-\code{\link{opiKineticStimulus}}, 
-\code{\link{opiTemporalStimulus}}, 
-\code{\link{chooseOPI}}
+\code{\link{chooseOpi}}
 }
+
 \examples{
 ##---- Should be DIRECTLY executable !! ----
 ##-- ==>  Define data, use random,
 ##--	or do  help(data=index)  for the standard data sets.
 
+    chooseOpi("SimHenson", type="C", cap=6)
+    opiInitialize()
+
+        # Stimulus is Size III white-on-white as in the HFA
+    makeStim <- function(db, n) {
+        s <- list(x=9, y=9, level=dbTocd(db), size=0.43, color="white",
+                 duration=200, responseWindow=1500)
+        class(s) <- "opiStaticStimulus"
+
+        return(s)
+    }
+
+        # call the Full Threshold staircase
+    result <- FT(est=25, makeStim=makeStim, tt=30, fpr=0.15, fnr=0.03)
+
+    opiClose()
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

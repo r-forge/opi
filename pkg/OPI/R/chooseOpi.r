@@ -28,24 +28,21 @@
 #   TRUE     If successful
 #   FALSE    Otherwise
 ################################################################################
-chooseOpi <- function(opi="SimHenson", type="N") {
+chooseOpi <- function(opi="SimHenson", type="N", cap=6) {
     if (opi == "Octopus900") {
         stop("Have not implemented chooseOPI(Octopus900)")
     } else if (opi == "HEP") {
         stop("Have not implemented chooseOPI(HEP)")
     } else if (opi == "SimHenson") {
+        if (!is.element(type,c("N","G","C"))) {
+            stop(paste("Bad 'type' specified for SimHenson in chooseOpi()",type))
+        }
+        .GlobalEnv$simH.type        <- type
+        .GlobalEnv$simH.cap         <- cap
         .GlobalEnv$opiInitialize    <- simH.opiInitialize
         .GlobalEnv$opiClose         <- simH.opiClose
         .GlobalEnv$opiSetBackground <- simH.opiSetBackground
         .GlobalEnv$opiQueryDevice   <- simH.opiQueryDevice
-        if (type == "N") {
-            .GlobalEnv$opiPresent <- simH.opiPresent.N
-        } else if (type == "G") {
-            .GlobalEnv$opiPresent <- simH.opiPresent.G
-        } else if (type == "C") {
-            .GlobalEnv$opiPresent <- simH.opiPresent.C
-        } else {
-            stop("Bad type specified for SimHenson in chooseOpi()")
-        }
+        .GlobalEnv$opiPresent       <- simH.opiPresent
     }
 }

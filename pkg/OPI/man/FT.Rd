@@ -30,9 +30,9 @@ and returns an OPI datatype ready for passing to opiPresent
 Extra parameters to pass to the opiPresent function
 }
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
+%\details{
+%%%  ~~ If necessary, more details than the description above ~~
+%}
 \value{
 Returns a list containing
 \item{npres}{Total number of presentations}
@@ -48,9 +48,9 @@ http://perimetry.org/OPI
 \author{
 Andrew Turpin <aturpin@unimelb.edu.au>
 }
-\note{
+%\note{
 %%  ~~further notes~~
-}
+%}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
