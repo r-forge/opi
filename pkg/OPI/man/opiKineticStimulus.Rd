@@ -14,7 +14,7 @@ path    \tab list of (x,y) coordinates in degrees that is usable by
 image   \tab \code{image[i]} is the image to display (in a machine specific format) in
 the section of the path specified by \code{path[i]..path[i+1]}. \cr
 levels  \tab if \code{is.na(image)} then \code{levels[i]} is the stimulus level in
-\eqn{cd/m^2}{cd/m^2} in the section of the path specified by
+cd/\eqn{\mbox{m}^2}{m^2} in the section of the path specified by
 \code{path[i]..path[i+1]}\cr
 sizes   \tab \code{sizes[i]} is the size of stimulus (diameter in degrees) to use for
 the section of path specified by \code{path[i]..path[i+1]}, or a scaling factor for

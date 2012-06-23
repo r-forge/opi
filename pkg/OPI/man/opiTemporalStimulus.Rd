@@ -14,7 +14,7 @@ y     \tab coordinate of the center of stimulus in degrees relative to fixation 
 image \tab an image to display in a machine specific format \cr
 lut   \tab if \code{is.na(image)} then this is a lookup 
            table (vector) for stimulus level
-           at each step of rate Hz in cd/\eqn{m^2}{m^2}. 
+           at each step of rate Hz in cd/\eqn{\mbox{m}^2}{m^2}. 
            If image is specified, then this is a list of
            images, in the same format as image, that is stepped through at rate Hz.\cr
 size  \tab diameter of target in degrees, or scaling factor for image if specified \cr

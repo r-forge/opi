@@ -5,7 +5,7 @@
 Convert cd/\eqn{m^2}{m^2} to Humphrey dB
 }
 \description{
-Given a value in cd/\eqn{m^2}{m^2}, return the Humphrey dB equivalent.
+Given a value in cd/\eqn{\mbox{m}^2}{m^2}, return the Humphrey dB equivalent.
 }
 \usage{
 cdTodb(cd)
@@ -13,7 +13,7 @@ cdTodb(cd)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{cd}{
-Value to convert in cd/\eqn{m^2}{m^2}
+Value to convert in cd/\eqn{\mbox{m}^2}{m^2}
 }
 }
 %\details{

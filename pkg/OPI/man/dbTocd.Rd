@@ -2,10 +2,10 @@
 \alias{dbTocd}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Convert Humphrey dB to cd/\eqn{m^2}{m^2}
+Convert Humphrey dB to cd/\eqn{\mbox{m}^2}{m^2}
 }
 \description{
-Given a value in Humphrey dB, return the cd/\eqn{m^2}{m^2} equivalent.
+Given a value in Humphrey dB, return the cd/\eqn{\mbox{m}^2}{m^2} equivalent.
 }
 \usage{
 dbTocd(db)
@@ -19,7 +19,7 @@ dbTocd(db)
 %\details{
 %}
 \value{
-Returns cd/\eqn{m^2}{m^2} value.
+Returns cd/\eqn{\mbox{m}^2}{m^2} value.
 }
 \references{
 http://perimetry.org/OPI

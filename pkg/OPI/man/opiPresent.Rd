@@ -56,9 +56,11 @@ should be checked by the machine specific implementations.
 
 \code{simH.opiPresent} uses the response to a stimuli as determined by sampling from a
 Frequency-of-Seeing (FoS) curve (also known as the psychometric
-function) with formula \code{fpr+(1-fpr-fnr)*(1-pnorm(x, tt, pxVar))},
-where \code{x} is the stimulus value in Humphrey dB, and pxVar is
-\code{min(simH.cap, exp(A*tt + B))}. The ceiling \code{simH.cap}
+function) with formula \deqn{\mbox{fpr}+(1-\mbox{fpr}-\mbox{fnr})(1-\mbox{pnorm}(x, \mbox{tt},
+\mbox{pxVar})),}{\code{fpr+(1-fpr-fnr)*(1-pnorm(x, tt, pxVar))},}
+where \eqn{x}{\code{x}} is the stimulus value in Humphrey dB, and pxVar is
+\deqn{\min\left(\mbox{simH.cap}, e^{A\times\mbox{tt}+B}\right).}{\code{min(simH.cap, exp(A*tt + B))}.} 
+The ceiling \code{simH.cap}
 is set with the call to \code{chooseOpi}, and \code{A} and \code{B}
 are from Table 1 in Henson et al (2000). Which values are used is
 determined by \code{simH.type} which is also set in the call to
