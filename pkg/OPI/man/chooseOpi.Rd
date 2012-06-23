@@ -31,10 +31,12 @@ chooseOpi(opi = "SimHenson", type = "N", cap=6)
 }
 \details{ 
     When \code{opi} is \code{"SimHenson"}, then \code{type} can take on 3
-    values: 
-    \code{"N"}, which uses the equation for normal variability; 
-    \code{"G"}, which uses the equation for glaucoma variability; and
-    \code{"C"}, which uses the equation for combined variability.
+    values
+    \tabular{cl}{
+    \code{"N"} \tab which uses the equation for normal variability \cr
+    \code{"G"} \tab which uses the equation for POAG variability \cr
+    \code{"C"} \tab which uses the equation for combined variability \cr
+    }
 }
 \value{ Returns nothing.}
 
@@ -56,12 +58,7 @@ Andrew Turpin <aturpin@unimelb.edu.au>
 %\note{ }
 
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
     chooseOpi("SimHenson", type="C", cap=6)
-
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

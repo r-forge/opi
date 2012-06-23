@@ -45,7 +45,7 @@ simH.present <- function(db, cap=6, fpr=0.03, fnr=0.01, tt=30, A, B) {
         seen= runif(1) < prSeeing,
         time= 0
     ))
-}# opiPresent.opiStaticStimulus.N
+}#
 
 #
 # stim is list of type opiStaticStimulus

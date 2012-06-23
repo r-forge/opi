@@ -35,10 +35,6 @@ Andrew Turpin <aturpin@unimelb.edu.au>
 \code{\link{cdTodb}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
     cd <- dbTocd(0)   # 10000/pi
     cd <- dbTocd(10)  # 1000/pi
     cd <- dbTocd(20)  # 100/pi

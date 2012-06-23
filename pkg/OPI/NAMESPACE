@@ -5,6 +5,9 @@ export(FT)
 export(chooseOpi)
 export(dbTocd, cdTodb)
 
-S3method(simH.opiPresent, opiStaticStimulus)
-S3method(simH.opiPresent, opiKineticStimulus)
-S3method(simH.opiPresent, opiTemporalStimulus)
+#export(simH.opiPresent)
+#export(simH.opiPresent.opiStaticStimulus)
+
+#S3method(simH.opiPresent, opiStaticStimulus)
+#S3method(simH.opiPresent, opiKineticStimulus)
+#S3method(simH.opiPresent, opiTemporalStimulus)

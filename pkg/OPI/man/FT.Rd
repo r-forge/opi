@@ -58,11 +58,6 @@ Andrew Turpin <aturpin@unimelb.edu.au>
 \code{\link{dbTocd}}, \code{\link{opiPresent}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-
     # Stimulus is Size III white-on-white as in the HFA
 makeStim <- function(db, n) { 
     s <- list(x=9, y=9, level=dbTocd(db), size=0.43, color="white",

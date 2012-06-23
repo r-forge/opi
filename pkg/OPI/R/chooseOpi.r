@@ -22,8 +22,9 @@
 
 ################################################################################
 # Input parameters
-#   opi      Either "Octopus900", "HEP", "SimHenson"
-#   type     For SimHenson type=N|G|C for Normal, Glaucoma, Combined
+#   opi      Either "Octopus900", "HEP", "SimHenson", "SimGaussian"
+#   type     For SimHenson type=N|G|C for Normal, Glaucoma, Combined, cap=cap in dB
+#            For SimGaussian type= standard deviation in dB
 # Returns
 #   TRUE     If successful
 #   FALSE    Otherwise
@@ -44,5 +45,14 @@ chooseOpi <- function(opi="SimHenson", type="N", cap=6) {
         .GlobalEnv$opiSetBackground <- simH.opiSetBackground
         .GlobalEnv$opiQueryDevice   <- simH.opiQueryDevice
         .GlobalEnv$opiPresent       <- simH.opiPresent
+    } else if (opi == "SimGaussian") {
+        .GlobalEnv$simG.sd          <- type
+        .GlobalEnv$opiInitialize    <- simG.opiInitialize
+        .GlobalEnv$opiClose         <- simG.opiClose
+        .GlobalEnv$opiSetBackground <- simG.opiSetBackground
+        .GlobalEnv$opiQueryDevice   <- simG.opiQueryDevice
+        .GlobalEnv$opiPresent       <- simG.opiPresent
+    } else {
+        stop(paste("I do not have an implemention of the OPI called",opi))
     }
 }

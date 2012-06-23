@@ -1,5 +1,7 @@
 \name{opiPresent}
 \alias{opiPresent}
+\alias{simH.opiPresent}
+\alias{simG.opiPresent}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Use OPI to present stimulus.
@@ -7,12 +9,15 @@ Use OPI to present stimulus.
 \description{
 Generic function for presentation of stimulus stim. 
 Depending on your choice of OPI implementation set using 
-\code{chooseOPI()}, 
+\code{chooseOpi()}, 
 different \code{opiPresent} methods will be called. 
 Use \code{methods(opiPresent)} to list the current.
 }
 \usage{
 opiPresent(stim, nextStim=NULL, ...)
+
+simH.opiPresent(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30)
+simG.opiPresent(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,6 +35,10 @@ opiPresent(stim, nextStim=NULL, ...)
   \item{\dots}{
     Parameters specific to your chosen opi implementation.
 }
+
+    \item{fpr}{The false positive rate in [0,1].}
+    \item{fnr}{The false positive rate in [0,1].}
+    \item{tt}{The true threshold in Humphrey dB.}
 }
 \details{
 \code{opiPresent} 
@@ -44,6 +53,24 @@ aperture and/or filter wheels.)
 There is no guarantee that the next call to
 \code{opiPresent} will have \code{nextStim} as the first argument; this 
 should be checked by the machine specific implementations.
+
+\code{simH.opiPresent} uses the response to a stimuli as determined by sampling from a
+Frequency-of-Seeing (FoS) curve (also known as the psychometric
+function) with formula \code{fpr+(1-fpr-fnr)*(1-pnorm(x, tt, pxVar))},
+where \code{x} is the stimulus value in Humphrey dB, and pxVar is
+\code{min(simH.cap, exp(A*tt + B))}. The ceiling \code{simH.cap}
+is set with the call to \code{chooseOpi}, and \code{A} and \code{B}
+are from Table 1 in Henson et al (2000). Which values are used is
+determined by \code{simH.type} which is also set in the call to
+\code{chooseOpi}.
+
+\code{simG.opiPresent} uses the response to a stimuli as determined by sampling from a
+Frequency-of-Seeing (FoS) curve (also known as the psychometric
+function) with formula \code{fpr+(1-fpr-fnr)*(1-pnorm(x, tt, simG.sd))},
+where \code{x} is the stimulus value in Humphrey dB, and \code{simG.sd} is
+set with the \code{type} parameter in the 
+call to \code{chooseOpi}.
+
 }
 \value{
 A list containing
@@ -64,25 +91,22 @@ value is undefined.
 }
 \references{
 http://perimetry.org/OPI
+
+David B. Henson, Shaila Chaudry, Paul H. Artes, E. Brian Faragher, and
+Alec Ansons.  
+Response Variability in the Visual Field: Comparison of Optic Neuritis,
+Glaucoma, Ocular Hypertension, and Normal Eyes.
+Investigative Ophthalmology & Visual Science, February 2000, Vol. 41(2).
 }
 \author{
 Andrew Tuprin <aturpin@unimelb.edu.au>
 }
-%\note{
-%%%  ~~further notes~~
-%}
 
 \seealso{
 \code{\link{opiStaticStimulus}}, 
 \code{\link{opiKineticStimulus}}, 
 \code{\link{opiTemporalStimulus}}, 
-\code{\link{chooseOPI}}
-}
-\examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
+\code{\link{chooseOpi}}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

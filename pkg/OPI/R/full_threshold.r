@@ -34,7 +34,7 @@
 #   verbose       True if you want each presentation printed
 #   makeStim      A helper function to create the required
 #                 OPI data type for passing to opiPresent
-#   ...           Parameters for makeStim
+#   ...           Parameters for opiPresent
 # Returns a list containing
 #   npres    Total number of presentations
 #   respSeq  Response sequence stored as a list of (seen,dB) pairs

@@ -36,10 +36,6 @@ Andrew Turpin <aturpin@unimelb.edu.au>
 \code{\link{dbTocd}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
     dB <- cdTodb(10000/pi)  # 0 dB
     dB <- cdTodb(1000/pi)   # 10 dB
     dB <- cdTodb(100/pi)    # 20 dB
