@@ -5,8 +5,8 @@
 Full Threshold 
 }
 \description{
-FT begins with a 4-2dB staircase at level est. If the final estimate 
-(last seen) is more than 4dB away from est, a second 4-2 staircase is
+FT begins with a 4-2dB staircase at level \code{est}. If the final estimate 
+(last seen) is more than 4dB away from \code{est}, a second 4-2 staircase is
 completed beginning at the estimate returned from the first.
 }
 \usage{
@@ -30,9 +30,6 @@ and returns an OPI datatype ready for passing to opiPresent
 Extra parameters to pass to the opiPresent function
 }
 }
-%\details{
-%%%  ~~ If necessary, more details than the description above ~~
-%}
 \value{
 Returns a list containing
 \item{npres}{Total number of presentations}
@@ -41,16 +38,11 @@ Returns a list containing
 \item{final}{Final threshold estimate in dB}
 }
 \references{
-%% ~put references to the literature/web site here ~
 http://perimetry.org/OPI
-
 }
 \author{
 Andrew Turpin <aturpin@unimelb.edu.au>
 }
-%\note{
-%%  ~~further notes~~
-%}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
@@ -67,9 +59,13 @@ makeStim <- function(db, n) {
     return(s)
 }
 chooseOpi("SimHenson")
-opiInitialize()
+if (!is.null(opiInitialize("C", 6)))
+    stop("opiInitialize failed")
+
 result <- FT(makeStim=makeStim, tt=30, fpr=0.15, fnr=0.01)
-opiClose()
+
+if (!is.null(opiClose()))
+    warning("opiClose() failed")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

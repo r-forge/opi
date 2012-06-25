@@ -1,8 +1,5 @@
 \name{opiPresent}
 \alias{opiPresent}
-\alias{simH.opiPresent}
-\alias{simG.opiPresent}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Use OPI to present stimulus.
 }
@@ -10,35 +7,27 @@ Use OPI to present stimulus.
 Generic function for presentation of stimulus stim. 
 Depending on your choice of OPI implementation set using 
 \code{chooseOpi()}, 
-different \code{opiPresent} methods will be called. 
-Use \code{methods(opiPresent)} to list the current.
+different parameters are available for \code{opiPresent}.
 }
 \usage{
 opiPresent(stim, nextStim=NULL, ...)
-
-simH.opiPresent(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30)
-simG.opiPresent(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{stim}{
     A list of class \code{opiStaticStimulus}, \code{opiKineticStimulus}, or
-\code{opiTemporalStimulus}. 
-}
+        \code{opiTemporalStimulus}. 
+  }
   \item{nextStim}{
     As for \code{stim}, but the next presentation to be made. 
     This might be useful
     on some machines, particularly projector based systems, where preparations
     for the next presentation can be made while waiting for a response to the
     current.
-}
+  }
   \item{\dots}{
     Parameters specific to your chosen opi implementation.
-}
-
-    \item{fpr}{The false positive rate in [0,1].}
-    \item{fnr}{The false positive rate in [0,1].}
-    \item{tt}{The true threshold in Humphrey dB.}
+  }
 }
 \details{
 \code{opiPresent} 
@@ -54,24 +43,36 @@ There is no guarantee that the next call to
 \code{opiPresent} will have \code{nextStim} as the first argument; this 
 should be checked by the machine specific implementations.
 
-\code{simH.opiPresent} uses the response to a stimuli as determined by sampling from a
+\subsection{SimHenson}{
+
+\code{opiPresent(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30)}
+
+If the chosen OPI implementation is \code{SimHenson}, then
+the response to a stimuli is determined by sampling from a
 Frequency-of-Seeing (FoS) curve (also known as the psychometric
 function) with formula \deqn{\mbox{fpr}+(1-\mbox{fpr}-\mbox{fnr})(1-\mbox{pnorm}(x, \mbox{tt},
 \mbox{pxVar})),}{\code{fpr+(1-fpr-fnr)*(1-pnorm(x, tt, pxVar))},}
 where \eqn{x}{\code{x}} is the stimulus value in Humphrey dB, and pxVar is
-\deqn{\min\left(\mbox{simH.cap}, e^{A\times\mbox{tt}+B}\right).}{\code{min(simH.cap, exp(A*tt + B))}.} 
-The ceiling \code{simH.cap}
-is set with the call to \code{chooseOpi}, and \code{A} and \code{B}
+\deqn{\min\left(\mbox{simH.global.cap}, e^{A\times\mbox{tt}+B}\right).}{\code{min(simH.cap, exp(A*tt + B))}.} 
+The ceiling \code{simH.global.cap}
+is set with the call to \code{opiInitialize}, and \code{A} and \code{B}
 are from Table 1 in Henson et al (2000). Which values are used is
 determined by \code{simH.type} which is also set in the call to
-\code{chooseOpi}.
+\code{opiInitialize}.
+}
 
-\code{simG.opiPresent} uses the response to a stimuli as determined by sampling from a
+
+\subsection{SimGaussian}{
+
+\code{opiPresent(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30)}
+
+If the chosen OPI implementation is \code{SimGaussian}, then
+the response to a stimuli as determined by sampling from a
 Frequency-of-Seeing (FoS) curve (also known as the psychometric
-function) with formula \code{fpr+(1-fpr-fnr)*(1-pnorm(x, tt, simG.sd))},
-where \code{x} is the stimulus value in Humphrey dB, and \code{simG.sd} is
-set with the \code{type} parameter in the 
-call to \code{chooseOpi}.
+function) with formula \code{fpr+(1-fpr-fnr)*(1-pnorm(x, tt, simG.global.sd))},
+where \code{x} is the stimulus value in Humphrey dB, and \code{simG.global.sd} is
+set with \code{opiInitialize}.
+}
 
 }
 \value{
@@ -110,6 +111,24 @@ Andrew Tuprin <aturpin@unimelb.edu.au>
 \code{\link{opiTemporalStimulus}}, 
 \code{\link{chooseOpi}}
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+
+\examples{
+    # Stimulus is Size III white-on-white as in the HFA
+makeStim <- function(db, n) { 
+    s <- list(x=9, y=9, level=dbTocd(db), size=0.43, color="white",
+             duration=200, responseWindow=1500)
+    class(s) <- "opiStaticStimulus"
+
+    return(s)
+}
+chooseOpi("SimHenson")
+if (!is.null(opiInitialize("C", 6)))
+    stop("opiInitialize failed")
+
+result <- opiPresent(stim=makeStim(10,0), tt=30, fpr=0.15, fnr=0.01)
+
+if (!is.null(opiClose()))
+    warning("opiClose() failed")
+}
+
 \keyword{ misc }

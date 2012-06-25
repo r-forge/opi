@@ -1,0 +1,70 @@
+\name{opiInitialize}
+\alias{opiInitialize}
+\title{
+Initialize OPI.
+}
+\description{
+Generic function for initialization of the chosen OPI implementation that is set with
+\code{chooseOpi()}.
+}
+\usage{
+opiInitialize(...)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+    \item{\dots}{Implementation specific parameters. See details.}
+}
+\details{
+\subsection{SimHenson}{
+    \code{opiInitialize(type, cap)}
+
+    If the chosen OPI implementation is \code{SimHenson}, then
+  \code{type} can be one of:
+    \code{"N"}, for normal patients; 
+    \code{"G"}, for POAG patients; and
+    \code{"C"}, for a combination. See Table 1 in Henson et al (2000).
+    \code{cap} is the maximum
+    standard deviation value that the simulator will use for
+    the slope/spread of the psychometric function.
+}
+\subsection{SimGaussian}{
+    \code{opiInitialize(sd)}
+
+    If the chosen OPI implementation is \code{SimGaussian}, then \code{sd}
+    is the standard deviation value that the simulator will use for 
+    the slope/spread of the psychometric function.
+}
+}
+
+\value{
+Returns NULL if initialization succeeded, 
+otherwise an implementation dependant error.
+}
+\references{
+http://perimetry.org/OPI
+
+David B. Henson, Shaila Chaudry, Paul H. Artes, E. Brian Faragher, and
+Alec Ansons.  
+Response Variability in the Visual Field: Comparison of Optic Neuritis,
+Glaucoma, Ocular Hypertension, and Normal Eyes.
+Investigative Ophthalmology & Visual Science, February 2000, Vol. 41(2).
+}
+\author{
+Andrew Tuprin <aturpin@unimelb.edu.au>
+}
+
+\seealso{
+\code{\link{chooseOpi}}
+}
+
+\examples{
+chooseOpi("SimHenson")
+if (!is.null(opiInitialize(type="C", cap=6)))
+    stop("opiInitialize failed")
+
+chooseOpi("SimGaussian")
+if (!is.null(opiInitialize(sd=2)))
+    stop("opiInitialize failed")
+}
+
+\keyword{ misc }

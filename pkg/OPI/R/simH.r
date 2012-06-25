@@ -1,5 +1,5 @@
 #
-# An iimplementation of the OPI that simulates responses using 
+# An implementation of the OPI that simulates responses using 
 # Henson et al (2000) variability.
 #
 # Author: Andrew Turpin    (aturpin@unimelb.edu.au)
@@ -21,14 +21,36 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-simH.opiClose         <- function() { }
-simH.opiInitialize    <- function() { }
-simH.opiSetBackground <- function() { }
+simH.opiClose         <- function() { return(NULL) }
+simH.opiSetBackground <- function() { return(NULL) }
 simH.opiQueryDevice   <- function() { return (list(type="SimHenson")) }
 
-simH.type <- NA
-simH.cap  <- NA
+simH.global.type <- NA
+simH.global.cap  <- NA
 
+################################################################################
+# Input
+#   type N|G|C for the three Henson params
+#   cap  dB value for capping stdev form Henson formula
+#
+# Return NULL if succesful, string error message otherwise  
+################################################################################
+simH.opiInitialize <- function(type="C", cap=6) {
+    if (!is.element(type,c("N","G","C"))) {
+        msg <- paste("Bad 'type' specified for SimHenson in opiInitialize():",type)
+        warning(msg)
+        return(msg)
+    }
+
+    assign("simH.global.type", type, envir = .GlobalEnv)
+    assign("simH.global.cap",  cap , envir = .GlobalEnv)
+
+    return(NULL)
+}
+
+################################################################################
+#
+################################################################################
 simH.opiPresent <- function(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30) { UseMethod("simH.opiPresent") }
 setGeneric("simH.opiPresent")
 
@@ -51,18 +73,30 @@ simH.present <- function(db, cap=6, fpr=0.03, fnr=0.01, tt=30, A, B) {
 # stim is list of type opiStaticStimulus
 #
 simH.opiPresent.opiStaticStimulus <- function(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30) {
-    if (.GlobalEnv$simH.type == "N") {
-        return(simH.present(cdTodb(stim$level), .GlobalEnv$simH.cap, fpr, fnr, tt, -0.066, 2.81))
-    } else if (.GlobalEnv$simH.type == "G") {
-        return(simH.present(cdTodb(stim$level), .GlobalEnv$simH.cap, fpr, fnr, tt, -0.098, 3.62))
-    } else if (.GlobalEnv$simH.type == "C") {
-        return(simH.present(cdTodb(stim$level), .GlobalEnv$simH.cap, fpr, fnr, tt, -0.081, 3.27))
+    if (!exists(.GlobalEnv$simH.global.type)) {
+        return ( list(
+            err = "opiInitialize(type,cap) was not called before opiPresent()",
+            seen= NA,
+            time= NA 
+        ))
+    }
+
+    if (.GlobalEnv$simH.global.type == "N") {
+        return(simH.present(cdTodb(stim$level), .GlobalEnv$simH.global.cap, fpr, fnr, tt, -0.066, 2.81))
+    } else if (.GlobalEnv$simH.global.type == "G") {
+        return(simH.present(cdTodb(stim$level), .GlobalEnv$simH.global.cap, fpr, fnr, tt, -0.098, 3.62))
+    } else if (.GlobalEnv$simH.global.type == "C") {
+        return(simH.present(cdTodb(stim$level), .GlobalEnv$simH.global.cap, fpr, fnr, tt, -0.081, 3.27))
     } else {
-        stop(paste("Invalid type parameter passed to simH.opiPresent():",.GlobalEnv$simH.type))
+        return ( list(
+            err = "Unknown error in opiPresent() for SimHenson",
+            seen= NA,
+            time= NA 
+        ))
     }
 }
 
-##########################################
+########################################## TO DO !
 simH.opiPresent.opiTemporalStimulus <- function(stim, nextStim=NULL, ...) {
     stop("ERROR: haven't written simH temporal persenter yet")
 }

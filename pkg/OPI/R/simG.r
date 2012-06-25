@@ -21,18 +21,35 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-simG.opiClose         <- function() { }
-simG.opiInitialize    <- function() { }
-simG.opiSetBackground <- function() { }
+simG.opiClose         <- function() { return(NULL) }
+simG.opiSetBackground <- function() { return(NULL) }
 simG.opiQueryDevice   <- function() { return (list(type="SimGaussian")) }
 
-simG.sd <- NA
+################################################################################
+# Input
+#   sd standard deviation for the Gaussian
+#
+# Return NULL if succesful, string error message otherwise  
+################################################################################
+simG.opiInitialize <- function(sd) {
+    if (!is.numeric(sd) || (sd < 0)) {
+        msg <- paste("Invalid standard deviation in opiInitialize for SimGaussian:",sd)
+        warning(msg)
+        return(msg)
+    }
+
+    assign("simG.global.sd", sd, envir = .GlobalEnv)
+    return(NULL)
+}
+
+################################################################################
+simG.global.sd <- NA
 
 simG.opiPresent <- function(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30) { UseMethod("simG.opiPresent") }
 setGeneric("simG.opiPresent")
 
 simG.opiPresent.opiStaticStimulus <- function(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30) {
-    prSeeing <- fpr + (1-fpr-fnr)*(1-pnorm(cdTodb(stim$level), mean=tt, sd=.GlobalEnv$simG.sd))
+    prSeeing <- fpr + (1-fpr-fnr)*(1-pnorm(cdTodb(stim$level), mean=tt, sd=.GlobalEnv$simG.global.sd))
 
     return ( list(
         err = NULL,
@@ -41,7 +58,7 @@ simG.opiPresent.opiStaticStimulus <- function(stim, nextStim=NULL, fpr=0.03, fnr
     ))
 }#
 
-##########################################
+########################################## TO DO
 simG.opiPresent.opiTemporalStimulus <- function(stim, nextStim=NULL, ...) {
     stop("ERROR: haven't written simG temporal persenter yet")
 }

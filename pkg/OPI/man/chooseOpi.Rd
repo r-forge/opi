@@ -8,37 +8,25 @@ Choose an implementation of the OPI.
 Chooses an implementation of the OPI to use.
 }
 \usage{
-chooseOpi(opi = "SimHenson", type = "N", cap=6)
+chooseOpi(opiImplementation)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{opi}{
-    A character string that is either: "SimHenson", for a simulator that
-    uses variability according to Henson et al (2000) where variability
-    increases as Humphrey dB value decreases; "Octopus900", for interfacing
-    with the Octopus 900; "HEP", for interfacing with the
-    Heidelberg Edge Perimeter.
-}
-  \item{type}{
-    An extra controlling parameter that can be used to subspecialise 
-    your machine. 
-    }
-  \item{cap}{
-    When \code{opi="SimHenson"}, \code{cap} sets the maximum 
-    standard deviation that can be derived from Henson et al's formula
-    for determing FoS/psychometric function slope.
+  \item{opiImplementation}{
+    A character string that is one of the following.
+    \tabular{ll}{
+    "SimHenson" \tab for a simulator that uses a cummulative gaussian psychometric function with \cr
+                \tab standard deviation according to Henson et al (2000) \cr
+                \tab where variability increases as true threshold (Humphrey dB) value decreases. \cr
+    "SimGaussian" \tab for a simulator that uses a cummulative gaussian psychometric function with \cr
+                \tab standard deviation supplied in opiInitialize(). \cr
+    "Octopus900"\tab for interfacing with the Octopus 900 \cr
+    "HEP"       \tab for interfacing with the Heidelberg Edge Perimeter.\cr
+    NULL        \tab print a list of available OPI implementations.
     }
 }
-\details{ 
-    When \code{opi} is \code{"SimHenson"}, then \code{type} can take on 3
-    values
-    \tabular{cl}{
-    \code{"N"} \tab which uses the equation for normal variability \cr
-    \code{"G"} \tab which uses the equation for POAG variability \cr
-    \code{"C"} \tab which uses the equation for combined variability \cr
-    }
 }
-\value{ Returns nothing.}
+\value{ Returns TRUE if successful, FALSE otherwise.}
 
 \references{
 David B. Henson, Shaila Chaudry, Paul H. Artes, E. Brian Faragher, and
@@ -58,7 +46,8 @@ Andrew Turpin <aturpin@unimelb.edu.au>
 %\note{ }
 
 \examples{
-    chooseOpi("SimHenson", type="C", cap=6)
+    if(!chooseOpi("SimHenson"))
+        warnings()
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
