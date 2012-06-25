@@ -18,8 +18,7 @@ opiQueryDevice(...)
 %}
 
 \value{
-Returns NULL if initialization succeeded, 
-otherwise an implementation dependant error.
+Returns implementation dependant data.
 }
 \references{
 http://perimetry.org/OPI
