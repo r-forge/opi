@@ -16,7 +16,7 @@ opiInitialize(...)
 }
 \details{
 \subsection{SimHenson}{
-    \code{opiInitialize(type, cap)}
+    \code{opiInitialize(type="C", cap=6)}
 
     If the chosen OPI implementation is \code{SimHenson}, then
   \code{type} can be one of:

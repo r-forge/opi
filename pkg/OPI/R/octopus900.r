@@ -139,13 +139,8 @@ setupBackgroundConstants <- function() {
 #	seen = 1 if seen, 0 otherwise
 #	time = reaction time
 ###########################################################################
-octo900.opiPresent <- function(stim, nextStim) { 
-	if (is.null(stim)) {
-		opiPresent.opiStaticStimulus(NULL)
-	} else {
-		UseMethod("opiPresent") 
-	}
-}
+octo900.opiPresent <- function(stim, nextStim=NULL) { UseMethod("octo900.opiPresent") }
+setGeneric("octo900.opiPresent")
 
 octo900.opiPresent.opiStaticStimulus <- function(stim, nextStim) {
     if (is.null(stim)) {
@@ -181,9 +176,19 @@ octo900.opiPresent.opiStaticStimulus <- function(stim, nextStim) {
 	))
 }
 
+########################################## TO DO
+
+octo900.opiPresent.opiTemporalStimulus <- function(stim, nextStim=NULL, ...) {
+    stop("ERROR: haven't written octo900 temporal persenter yet")
+}
+
+octo900.opiPresent.opiKineticStimulus <- function(stim, nextStim=NULL, ...) {
+    stop("ERROR: haven't written octo900 kinetic persenter yet")
+}
+
 ###########################################################################
 #
-# XXX What the hell are these params?
+# Input paras are the opi.O900.* constants
 #
 # @return NULL is succeed.
 # @return -1 if opiInitialize has not been successfully called
@@ -191,9 +196,6 @@ octo900.opiPresent.opiStaticStimulus <- function(stim, nextStim) {
 # @return -3 trouble setting fixation
 ###########################################################################
 octo900.opiSetBackground <- function(lum=NA, color=NA, fixation=NA, fixIntensity) {
-    if (is.null(lum)) {
-    }
-
     ret <- .jcall(opi.global.octopusObject, "I", "opiSetBackground", lum, color, fixation, fixIntensity)
     if (ret == 0)
         return(NULL)
