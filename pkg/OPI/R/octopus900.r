@@ -196,7 +196,11 @@ octo900.opiPresent.opiKineticStimulus <- function(stim, nextStim=NULL, ...) {
 # @return -3 trouble setting fixation
 ###########################################################################
 octo900.opiSetBackground <- function(lum=NA, color=NA, fixation=NA, fixIntensity) {
-    ret <- .jcall(opi.global.octopusObject, "I", "opiSetBackground", lum, color, fixation, fixIntensity)
+    ret <- .jcall(opi.global.octopusObject, "I", "opiSetBackground", 
+            as.double(lum), 
+            as.double(color), 
+            as.double(fixation), 
+            as.double(fixIntensity))
     if (ret == 0)
         return(NULL)
     else
