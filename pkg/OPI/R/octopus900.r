@@ -162,6 +162,9 @@ octo900.opiPresent.opiStaticStimulus <- function(stim, nextStim) {
 	    .jcall(nextObj, "V", "setResponseWindow", as.double(nextStim$responseWindow))
     }
 
+    if(min(abs(GOLDMAN - stim$size)) != 0)
+        warning("opiPresent: Rounding stimulus size to nearest Goldmann size")
+
     # ret <- .jcall(opi.global.octopusObject, "Lopi/OpiPresentReturn;", "opiPresent", stimObj, nextObj)
 
     done <- FALSE
