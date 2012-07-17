@@ -34,6 +34,20 @@ opiInitialize(...)
     is the standard deviation value that the simulator will use for 
     the slope/spread of the psychometric function.
 }
+\subsection{Octopus900}{
+    \code{opiInitialize(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocation=NA, eye=NA)}
+
+    If the chosen OPI implementation is \code{Octopus900}, then you must 
+    specify two directory/folder names and the eye to be tested.
+
+    \code{eyeSuiteJarLocation} is the folder name containing the EyeSuite jar files,
+    and should include the trainling slash.
+
+    \code{eyeSuiteSettingsLocation} is the folder name containing the EyeSuite setting files,
+    and should include the trainling slash.
+
+    \code{eye} must be either "left" or "right".
+}
 }
 
 \value{
@@ -65,6 +79,15 @@ if (!is.null(opiInitialize(type="C", cap=6)))
 chooseOpi("SimGaussian")
 if (!is.null(opiInitialize(sd=2)))
     stop("opiInitialize failed")
+
+\dontrun{
+chooseOpi("Octopus900")
+if (!is.null(opiInitialize(
+        "C:/EyeSuite/", 
+        "C:/Documents and Settings/All Users/HAAG-STREIT/EyeSuite/",
+        "left")))
+    stop("opiInitialize failed")
+}
 }
 
 \keyword{ misc }

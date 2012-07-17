@@ -3,7 +3,7 @@
 #
 # This would all have been nicer in an OO style, with each implementation
 # being a subclass of an opi class, but I don't think it can be in R.
-# The OPI standard doesn't wants users employing exactly the same function 
+# The OPI standard doesn't want users employing exactly the same function 
 # no matter what the underlying implementation, and so there cannot be 
 # extra parameters to create method signatures for different classes.
 # Similarly, some implementations use exactly the same method signatures,
@@ -35,6 +35,14 @@
 # the opi* functions to index using opi.global.chooser.
 ################################################################################
 opi.implementations <- list(
+    list(
+        name="Octopus900",
+        opiInitialize    = "octo900.opiInitialize",
+        opiClose         = "octo900.opiClose",
+        opiSetBackground = "octo900.opiSetBackground",
+        opiQueryDevice   = "octo900.opiQueryDevice",
+        opiPresent       = "octo900.opiPresent"
+    ),
     list(
         name="SimHenson",
         opiInitialize    = "simH.opiInitialize",
@@ -76,15 +84,24 @@ chooseOpi <- function(opiImplementation) {
     }
 
         #
-        # Warn about the two unimplemented ones
+        # Warn about the one unimplemented one
         #
-    if (opiImplementation == "Octopus900") {
-        warning("Have not implemented chooseOPI(Octopus900)")
-        return(FALSE)
-    } else if (opiImplementation == "HEP") {
+    if (opiImplementation == "HEP") {
+        # require(rHEP)
         warning("Have not implemented chooseOPI(HEP)")
         return(FALSE)
     } 
+
+        #
+        # Check OPIOctopus900 package exists
+        #
+    if ((opiImplementation == "Octopus900") && !require(OPIOctopus900)) {
+        cat("***********************************************************************\n")
+        cat("* You cannot choose the Octopus900 OPI without installing the package *\n")
+        cat("* OPIOctopus900, which is available with permission from HAAG-STREIT. *\n")
+        cat("***********************************************************************\n")
+        stop("Get the Octopus900 package")
+    }
 
         #
         # Find the index in opi.implementations

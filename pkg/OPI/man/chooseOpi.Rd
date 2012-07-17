@@ -15,12 +15,15 @@ chooseOpi(opiImplementation)
   \item{opiImplementation}{
     A character string that is one of the following.
     \tabular{ll}{
-    "SimHenson" \tab for a simulator that uses a cummulative gaussian psychometric function with \cr
-                \tab standard deviation according to Henson et al (2000) \cr
-                \tab where variability increases as true threshold (Humphrey dB) value decreases. \cr
-    "SimGaussian" \tab for a simulator that uses a cummulative gaussian psychometric function with \cr
-                \tab standard deviation supplied in opiInitialize(). \cr
-    "Octopus900"\tab for interfacing with the Octopus 900 \cr
+    "SimHenson" \tab for a simulator that uses a cummulative gaussian 
+                psychometric function with standard deviation 
+                according to Henson et al (2000) where variability 
+                increases as true threshold (Humphrey dB) value 
+                decreases. \cr
+    "SimGaussian" \tab for a simulator that uses a cummulative gaussian 
+                psychometric function with 
+                standard deviation supplied in opiInitialize(). \cr
+    "Octopus900"\tab for interfacing with the Octopus 900. \cr
     "HEP"       \tab for interfacing with the Heidelberg Edge Perimeter.\cr
     NULL        \tab print a list of available OPI implementations.
     }
