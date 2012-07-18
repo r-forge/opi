@@ -2,7 +2,7 @@
 \alias{cdTodb}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Convert cd/\eqn{m^2}{m^2} to Humphrey dB
+Convert cd/\eqn{\mbox{m}^2}{m^2} to Humphrey dB
 }
 \description{
 Given a value in cd/\eqn{\mbox{m}^2}{m^2}, return the Humphrey dB equivalent.

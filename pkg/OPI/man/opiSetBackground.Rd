@@ -18,7 +18,8 @@ opiSetBackground(...)
 \subsection{Octopus900}{ 
     \code{opiSetBackground(lum, color, fixation, fixIntensity)} 
 
-    \code{lum} is the brightness of the background. Could be 
+    \itemize{
+    \item[\code{lum}] is the brightness of the background. Could be 
     \code{opi.O900.BG_OFF},
     \code{opi.O900.BG_1},
     \code{opi.O900.BG_10},
@@ -26,7 +27,7 @@ opiSetBackground(...)
     \code{opi.O900.BG_125}, or
     \code{opi.O900.BG_150}. Presumably the numbers are cd/\eqn{\mbox{m}^2}{m^2}. 
 
-    \code{color} is color of background. One of
+    \item[\code{color}] is color of background. One of
     \code{opi.O900.COL_WHITE},
     \code{opi.O900.COL_BLUE},
     \code{opi.O900.COL_YELLOW},
@@ -34,9 +35,10 @@ opiSetBackground(...)
     \code{opi.O900.COL_GREEN}, or
     \code{opi.O900.COL_USER}, with no gaurantee that any will work!
 
-    \code{fixation} is one of \code{opi.O900.FIX_CENTRE}, \code{opi.O900.FIX_CROSS}, or \code{opi.O900.FIX_RING}.
+    \item[\code{fixation}] is one of \code{opi.O900.FIX_CENTRE}, \code{opi.O900.FIX_CROSS}, or \code{opi.O900.FIX_RING}.
 
-    \code{fixIntensity} is unknown. Could be tenths of a dB.
+    \item[\code{fixIntensity}] is unknown. Could be tenths of a dB.
+}
 }
 \subsection{SimHenson}{ \code{opiSetBackground} has no arguments and no effect.  }
 \subsection{SimGaussian}{ \code{opiSetBackground} has no arguments and no effect.  }

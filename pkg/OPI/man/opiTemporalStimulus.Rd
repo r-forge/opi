@@ -8,31 +8,31 @@ Stimulus parameter list.
  with an S3 class attribute of \code{opiTemporalStimulus}.
 }
 \details{ 
-\tabular{ll}{
-x     \tab coordinate of the center of stimulus in degrees 
-           relative to fixation \cr
-y     \tab coordinate of the center of stimulus in degrees 
-           relative to fixation \cr
-image \tab an image to display in a machine specific format \cr
-lut   \tab if \code{is.na(image)} then this is a lookup 
+\itemize{
+\item[\code{x}]     coordinate of the center of stimulus in degrees 
+           relative to fixation 
+\item[\code{y}]     coordinate of the center of stimulus in degrees 
+           relative to fixation 
+\item[\code{image}] an image to display in a machine specific format 
+\item[\code{lut}]   if \code{is.na(image)} then this is a lookup 
            table (vector) for stimulus level at each step of 
            rate Hz in cd/\eqn{\mbox{m}^2}{m^2}. If image is 
            specified, then this is a list of images, in the 
            same format as image, that is stepped through at 
-           rate Hz.\cr
-size  \tab diameter of target in degrees, or scaling factor for 
-           image if specified \cr
-color \tab machine specific stimulus color settings (ignored 
-           if \code{!is.na(image)}) \cr
-rate  \tab frequency with which lut is processed in Hz \cr
-duration  \tab total length of stimulus flash in milliseconds. 
+           rate Hz.
+\item[\code{size}]  diameter of target in degrees, or scaling factor for 
+           image if specified 
+\item[\code{color}] machine specific stimulus color settings (ignored 
+           if \code{!is.na(image)}) 
+\item[\code{rate}]  frequency with which lut is processed in Hz 
+\item[\code{duration}]  total length of stimulus flash in milliseconds. 
                There is no guarantee that 
                \code{duration \%\% length(lut)/rate == 0}. 
                That is, the onus is on the user to ensure the 
-               duration is a multiple of the period of the stimuli. \cr
-responseWindow \tab maximum time (>= 0) in milliseconds to wait for a 
-                    response from the onset of the stimulus presentation \cr
-... \tab machine specific parameters \cr
+               duration is a multiple of the period of the stimuli. 
+\item[\code{responseWindow}] maximum time (>= 0) in milliseconds to wait for a 
+                    response from the onset of the stimulus presentation 
+\item[\code{...}] machine specific parameters 
 }
 }
 

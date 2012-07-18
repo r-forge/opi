@@ -12,20 +12,19 @@ chooseOpi(opiImplementation)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{opiImplementation}{
-    A character string that is one of the following.
-    \tabular{ll}{
-    "SimHenson" \tab for a simulator that uses a cummulative gaussian 
+  \item{opiImplementation}{A character string that is one of the following.
+    \itemize{
+    \item[\code{"SimHenson"}] for a simulator that uses a cummulative gaussian 
                 psychometric function with standard deviation 
                 according to Henson et al (2000) where variability 
                 increases as true threshold (Humphrey dB) value 
-                decreases. \cr
-    "SimGaussian" \tab for a simulator that uses a cummulative gaussian 
+                decreases. 
+    \item[\code{"SimGaussian"}] for a simulator that uses a cummulative gaussian 
                 psychometric function with 
-                standard deviation supplied in opiInitialize(). \cr
-    "Octopus900"\tab for interfacing with the Octopus 900. \cr
-    "HEP"       \tab for interfacing with the Heidelberg Edge Perimeter.\cr
-    NULL        \tab print a list of available OPI implementations.
+                standard deviation supplied in opiInitialize(). 
+    \item[\code{"Octopus900"}] for interfacing with the Octopus 900. 
+    \item[\code{"HEP"}]        for interfacing with the Heidelberg Edge Perimeter.
+    \item[\code{NULL}]         print a list of available OPI implementations.
     }
 }
 }

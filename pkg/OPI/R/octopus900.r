@@ -68,11 +68,11 @@ octo900.opiInitialize <- function(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocati
         stop("The eye argument of opiInitialize must be 'left' or 'right'")
 
     .jinit(c(
-        paste(eyeSuiteJarLocation, "jgoodies-binding-2.5.0.jar", sep=""),
-        paste(eyeSuiteJarLocation, "jgoodies-common-1.2.1.jar", sep=""),
 	    paste(eyeSuiteJarLocation, "HSEyeSuiteBasic.jar", sep=""),
 	    paste(eyeSuiteJarLocation, "HSEyeSuiteExtPerimetryViewer.jar", sep=""),
 	    paste(eyeSuiteJarLocation, "HSEyeSuiteExtPerimetry.jar", sep=""),
+        paste(.Library,"OPIOctopus900","jgoodies-binding-2.5.0.jar", sep="/"),
+        paste(.Library,"OPIOctopus900","jgoodies-common-1.2.1.jar", sep="/"),
         paste(.Library,"OPIOctopus900","java", sep="/")
     ))
 

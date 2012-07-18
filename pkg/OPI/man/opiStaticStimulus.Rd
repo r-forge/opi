@@ -8,22 +8,22 @@ Stimulus parameter list.
  with an S3 class attribute of \code{opiStaticStimulus}.
 }
 \details{ 
-The list mus contain the following elements.
-\tabular{ll}{
-x     \tab coordinate of the center of stimulus in degrees 
-           relative to fixation \cr
-y     \tab coordinate of the center of stimulus in degrees 
-           relative to fixation \cr
-image \tab an image to display in a machine specific format \cr
-level \tab stimulus level in cd/m2 (ignored if !is.na(image))\cr
-size  \tab diameter of target in degrees, or scaling factor for 
-           image if specified \cr
-color \tab machine specific stimulus color settings 
-           (ignored if !is.na(image)) \cr
-duration \tab total stimulus duration in milliseconds maximum \cr
-responseWindow \tab time (>= 0) in milliseconds to wait for a response from 
-                the onset of the stimulus presentation\cr
-... \tab machine specific parameters \cr
+The list must contain the following elements.
+\itemize{
+\item[\code{x}]     coordinate of the center of stimulus in degrees 
+           relative to fixation 
+\item[\code{y}]     coordinate of the center of stimulus in degrees 
+           relative to fixation 
+\item[\code{image}] an image to display in a machine specific format 
+\item[\code{level}] stimulus level in cd/m2 (ignored if !is.na(image))
+\item[\code{size}]  diameter of target in degrees, or scaling factor for 
+           image if specified 
+\item[\code{color}] machine specific stimulus color settings 
+           (ignored if !is.na(image)) 
+\item[\code{duration}] total stimulus duration in milliseconds maximum 
+\item[\code{responseWindow}] time (>= 0) in milliseconds to wait for a response from 
+                the onset of the stimulus presentation
+\item[\code{...}] machine specific parameters
 }
 }
 
