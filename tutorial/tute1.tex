@@ -1,0 +1,134 @@
+\documentclass{article}
+
+\title{A beginners guide to the OPI in R}
+\date{July 2012}
+\author{Andrew Turpin aturpin@unimelb.edu.au}
+
+\begin{document}
+\maketitle
+
+\section{Notation}
+
+Code will be in typewriter font like {\tt this}.
+Commands will be preceeded by a {\tt >}. You should not enter the {\tt >} in your code: it is
+the command prompt.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Installing}
+\label{sec-install}
+
+Inside R type the following.
+
+\begin{verbatim}
+> install.packages("c:\\OPI_v1.1.tar.gz", NULL, type="source")
+
+> install.packages("c:\\OPIOctopus900_v1.0.tar.gz", NULL, type="source")
+\end{verbatim}
+
+Make sure the first argument to each call to the {\tt install.packages}
+function is a valid path name to the package files.
+
+Also make sure you have the {\tt rJava} package installed if you
+want to use the Octopus 900 or the HEP. You need permission from
+HAAG-STREIT to get the OPIOctopus900 package, and from Heidelberg
+Engineering to get the rHep package.
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{First try}
+
+Assuming you have the OPI package installed, and any other nevessary
+packages for controlling an external machine, you are ready to go.
+
+First you must load the libraries with the {\tt library} or {\tt
+require} functions as follows.
+
+\begin{verbatim}
+> require(OPI)
+\end{verbatim}
+
+If R complains about these with an error message, return to Section~\ref{sec-install}.
+
+Now you must select which implementation of the OPI you want to
+use: a simulation, or a machine. This is done with the {\tt chooseOPI}
+function. You can get a list of the available implementations by
+calling {\tt chooseOPI} with an argument of {\tt NULL}.
+
+\begin{verbatim}
+> chooseOpi(NULL)
+        name         name           name    name 
+"Octopus900"   "SimHenson" "SimGaussian"   "HEP"
+[1] TRUE
+\end{verbatim}
+
+This shows us that there are three implementations available. Let’s choose
+the Octopus900 one.
+
+\begin{verbatim}
+> chooseOpi("Octopus900") 
+Loading required package: OPIOctopus900 
+[1] TRUE
+\end{verbatim}
+
+Note that choosing this implementation also loaded the required package
+OPIOctopus900. If you do not have this package, then you cannot control the
+Octopus 900. See Section~\ref{sec-install}.
+
+Once an OPI implementation is chosen, you need to execute opiInitialize.
+Depending on your implementation, different arguments are required for this
+function. You can get help on any function by typing a question mark and
+then the function name. For example:
+
+\begin{verbatim}
+> ?chooseOpi
+> ?opiInitialize
+\end{verbatim}
+
+For the Octopus 900, two folder names and the eye to be tested is required.
+\begin{verbatim}
+> opiInitialize("c:\Program Files\EyeSuite\",
++ "c:\Documents and Settings\All Users\HAAG STREIT\EyeSuite\",
++ "right")
+NULL
+\end{verbatim}
+The first folder is the location of the EyeSuite software. The folder should contain files
+named {\tt HS$\ast$.jar}.
+The second folder is the location of the EyeSuite settings.
+This command should return NULL if successful.
+
+Note that if the Octopus 900 has just been turned on, there will
+be a short delay before this function returns while the machine is
+calibrated. You should hear whirring and clicking noises from the machine.
+
+Now you can present a stimuli, and get a response. A stimuli is specified with a {\tt
+opiStaticStimulus} object, which is just a list of named values.
+
+[[ TODO - add more here. ]]
+
+\begin{verbatim}
+>   makeStim <- function(db) {
++        s <- list(x=9, y=9, level=dbTocd(db), size=0.43, color="white",
++                 duration=200, responseWindow=1500)
++        class(s) <- "opiStaticStimulus"
++
++        return(s)
++    }
+
+> opiPresent(makeStim(0), makeStim(0))
+\end{verbatim}            
+                          
+[[ TODO - add more here. ]]
+
+Finally, you chould close the OPI implementation. This is especially important for the Octopus
+900 as EyeSuite will not function if the OPI has hold of the machine.
+
+\begin{verbatim}
+> opiClose()
+\end{verbatim}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+
+
+
