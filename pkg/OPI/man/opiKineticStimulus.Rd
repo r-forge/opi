@@ -8,28 +8,29 @@ Stimulus parameter list.
  with an S3 class attribute of \code{opiKineticStimulus}.
 }
 \details{ 
+The list should contain the following elements.
 \itemize{
-\item[\code{path}]    list of (x,y) coordinates in degrees that is usable by
+\item\code{path}    list of (x,y) coordinates in degrees that is usable by
              \code{xy.coords()}
-\item[\code{image}]   \code{image[i]} is the image to display (in a machine specific 
+\item\code{image}   \code{image[i]} is the image to display (in a machine specific 
              format) in the section of the path specified by 
              \code{path[i]..path[i+1]}. 
 
-\item[\code{levels}]  if \code{is.na(image)} then \code{levels[i]} is the stimulus level in
+\item\code{levels}  if \code{is.na(image)} then \code{levels[i]} is the stimulus level in
              cd/\eqn{\mbox{m}^2}{m^2} in the section of the path specified by
              \code{path[i]..path[i+1]}
 
-\item[\code{sizes}]   \code{sizes[i]} is the size of stimulus (diameter in degrees) to use 
+\item\code{sizes}   \code{sizes[i]} is the size of stimulus (diameter in degrees) to use 
              for the section of path specified by \code{path[i]..path[i+1]}, or a 
              scaling factor for \code{images[i]}.
-\item[\code{colors}]  \code{colors[i]} is the color to use for the stimulus in the section 
+\item\code{colors}  \code{colors[i]} is the color to use for the stimulus in the section 
              of path specified by \code{path[i]..path[i+1]}. 
              Ignored if !is.na(image). 
 
-\item[\code{speeds}]  \code{speeds[i]} is the speed (degrees per second) for the stimulus 
+\item\code{speeds}  \code{speeds[i]} is the speed (degrees per second) for the stimulus 
              to traverse the path specified by \code{path[i]..path[i+1]}.
 
-\item[\code{...}] machine specific parameters 
+\item\code{...} machine specific parameters 
 }
 }
 

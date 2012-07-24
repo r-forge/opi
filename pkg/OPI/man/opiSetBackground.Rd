@@ -16,29 +16,38 @@ opiSetBackground(...)
 }
 \details{
 \subsection{Octopus900}{ 
-    \code{opiSetBackground(lum, color, fixation, fixIntensity)} 
+    \code{opiSetBackground(lum, color="white", background=NA, fixation=NA, fixIntensity=50)} 
 
     \itemize{
-    \item[\code{lum}] is the brightness of the background. Could be 
-    \code{opi.O900.BG_OFF},
-    \code{opi.O900.BG_1},
-    \code{opi.O900.BG_10},
-    \code{opi.O900.BG_100},
-    \code{opi.O900.BG_125}, or
-    \code{opi.O900.BG_150}. Presumably the numbers are cd/\eqn{\mbox{m}^2}{m^2}. 
+    \item\code{lum} is intensity of the background in cd/\eqn{\mbox{m}^2}{m^2}. Typical values include
+                the following.
+      \itemize{
+        \item \code{opi.O900.BG_OFF}, which turns background off.
+        \item \code{opi.O900.BG_1}, background of 1.27 cd/\eqn{\mbox{m}^2}{m^2}.
+        \item \code{opi.O900.BG_10}, background of 10 cd/\eqn{\mbox{m}^2}{m^2}.
+        \item \code{opi.O900.BG_100}, background of 100 cd/\eqn{\mbox{m}^2}{m^2}.
+      }
 
-    \item[\code{color}] is color of background. One of
-    \code{opi.O900.COL_WHITE},
-    \code{opi.O900.COL_BLUE},
-    \code{opi.O900.COL_YELLOW},
-    \code{opi.O900.COL_RED},
-    \code{opi.O900.COL_GREEN}, or
-    \code{opi.O900.COL_USER}, with no gaurantee that any will work!
+    \item\code{color} can be one of the following choices.
+        \itemize{
+            \item\code{opi.O900.MET_COL_WW} for white-on-white
+            \item\code{opi.O900.MET_COL_RW} for red-on-white
+            \item\code{opi.O900.MET_COL_BW} for blue-on-white
+            \item\code{opi.O900.MET_COL_WY} for white-on-yellow
+            \item\code{opi.O900.MET_COL_RY} for red-on-yellow
+            \item\code{opi.O900.MET_COL_BY} for blue-on-yellow
+        }
 
-    \item[\code{fixation}] is one of \code{opi.O900.FIX_CENTRE}, \code{opi.O900.FIX_CROSS}, or \code{opi.O900.FIX_RING}.
 
-    \item[\code{fixIntensity}] is unknown. Could be tenths of a dB.
-}
+    \item\code{fixation} is one of 
+        \itemize{
+            \item\code{opi.O900.FIX_CENTRE} or \code{opi.O900.FIX_CENTER}
+            \item\code{opi.O900.FIX_CROSS}
+            \item\code{opi.O900.FIX_RING}
+        }
+
+    \item\code{fixIntensity} is a percentage between 0 and 100. 0 is off, 100 the brightest.
+  }
 }
 \subsection{SimHenson}{ \code{opiSetBackground} has no arguments and no effect.  }
 \subsection{SimGaussian}{ \code{opiSetBackground} has no arguments and no effect.  }
@@ -73,6 +82,21 @@ if (!is.null(opiInitialize(sd=2)))
     stop("opiInitialize failed")
 if (!is.null(opiSetBackground()))
     stop("opiSetBackground failed, which is very surprising!")
+
+\dontrun{
+chooseOpi("Octopus900")
+if (!is.null(opiInitialize("c:/EyeSuite/","c:/Documents and Settings/All Users/Haag-Streit/","left"))
+    stop("opiInitialize failed")
+if (!is.null(opiSetBackground(fixation=opi.O900.FIX_CENTRE)))
+    stop("opiSetBackground failed")
+if (!is.null(opiSetBackground(fixation=opi.O900.FIX_RING, fixIntensity=0)))
+    stop("opiSetBackground failed")
+if (!is.null(opiSetBackground(color=opi.O900.MET_COL_BY)))
+    stop("opiSetBackground failed")
+if (!is.null(opiSetBackground(lum=opi.O900.BG_100, color=opi.O900.MET_COL_RW)))
+    stop("opiSetBackground failed")
+opiClose()
+}
 }
 
 \keyword{ misc }

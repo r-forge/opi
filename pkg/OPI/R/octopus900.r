@@ -34,18 +34,113 @@
 # July 2012
 #
 
-# -----------------------------------------------------------------
-# Fire up Java
-
 require(rJava)
+
+###################################################################
+# opi.global.octopusObject is the java Opi object set in opiInitialize
+###################################################################
 assign("opi.global.octopusObject", NULL, envir = .GlobalEnv)
 
-# -----------------------------------------------------------------
-# Goldmann target sizes in degrees
+# constants that get set from EyeSuite classes
+# in setupBackgroundConstants()
+# Here to avoid Note in R CMD check
+#opi.O900.FIX_CENTRE<-           NA
+#opi.O900.FIX_CROSS<-           NA
+#opi.O900.FIX_RING<-           NA
+#opi.O900.BG_OFF<-           NA
+#opi.O900.BG_1<-           NA
+#opi.O900.BG_10<-           NA
+#opi.O900.BG_100<-           NA
+#opi.O900.FIX_CENTER<-           NA
+#opi.O900.FIX_CENTRE<-           NA
+#opi.O900.STIM_WHITE<-           NA
+#opi.O900.STIM_BLUE<-           NA
+#opi.O900.STIM_RED<-           NA
+#opi.O900.BG_WHITE<-           NA
+#opi.O900.BG_YELLOW<-           NA
+#opi.O900.MET_COL_WW<-           NA
+#opi.O900.MET_COL_BY<-           NA
+#opi.O900.MET_COL_RW<-           NA
+#opi.O900.MET_COL_BLUE_WHITE<-   NA
+#opi.O900.MET_COL_RED_YELLOW<-   NA
+#opi.O900.MET_COL_WHITE_YELLOW<- NA
+#opi.O900.MET_COL_USER<-         NA
+#opi.O900.MET_COL_BW<-           NA
+#opi.O900.MET_COL_RY<-           NA
+#opi.O900.MET_COL_WY<-           NA
 
+###########################################################################
+# Get values for fixation, color and bg intensity constants
+# from EyeSuite classes, and set globals
+#       opi.O900.* 
+# to the values of those constants.
+# INPUT: None.
+# OUTPUT: None.
+# SIDE EFFECTS: sets opi.O900.* if possible.
+###########################################################################
+setupBackgroundConstants <- function() {
+    f <- .jfields("com.hs.eyesuite.ext.extperimetryviewer.peristatic.data.exam.Const")
+
+        #
+        # check if cName exists as a field in f. If so, set 
+        # opi.O900.cName <- class value for cName
+        #
+    getC <- function(cName) {
+        if (length(grep(cName, f)) > 0) 
+            assign(paste("opi.O900.",cName,sep=""),
+                   .jfield("com.hs.eyesuite.ext.extperimetryviewer.peristatic.data.exam.Const",NULL,cName), 
+                   envir = .GlobalEnv)
+    }
+
+    getC("FIX_CENTRE")
+    getC("FIX_CROSS")
+    getC("FIX_RING")
+    getC("BG_OFF")
+    getC("BG_1")        # 1.27 cd/m2 == 127 passed to MsgInitializePerimUnit
+    getC("BG_10")       # 10 cd/m2 == 1000
+    getC("BG_100")      # 100 cd/m2 == 10000
+
+    assign("opi.O900.FIX_CENTER", opi.O900.FIX_CENTRE, envir = .GlobalEnv)
+
+    f <- .jfields("com.hs.eyesuite.ext.extperimetry.octo900.ifocto.remote.OCTO900")
+
+        #
+        # check if cName exists as a field in f. If so, set 
+        # opi.O900.cName <- class value for cName
+        #
+    getC <- function(cName) {
+        if (length(grep(cName, f)) > 0) 
+            assign(paste("opi.O900.",cName,sep=""),
+                   .jfield("com.hs.eyesuite.ext.extperimetry.octo900.ifocto.remote.OCTO900",NULL,cName), 
+                   envir = .GlobalEnv)
+    }
+
+        # get the color fields from OCTO900
+    getC("STIM_WHITE")
+    getC("STIM_BLUE")
+    getC("STIM_RED")
+    getC("BG_WHITE")
+    getC("BG_YELLOW")
+    getC("MET_COL_WW")
+    getC("MET_COL_BY")
+    getC("MET_COL_RW")
+    getC("MET_COL_BLUE_WHITE")
+    getC("MET_COL_RED_YELLOW")
+    getC("MET_COL_WHITE_YELLOW")
+    getC("MET_COL_USER")
+
+    assign("opi.O900.MET_COL_BW", opi.O900.MET_COL_BLUE_WHITE, envir = .GlobalEnv)
+    assign("opi.O900.MET_COL_RY", opi.O900.MET_COL_RED_YELLOW, envir = .GlobalEnv)
+    assign("opi.O900.MET_COL_WY", opi.O900.MET_COL_WHITE_YELLOW, envir = .GlobalEnv)
+}
+
+
+###################################################################
+# Goldmann target sizes in degrees
+###################################################################
 GOLDMAN <- c(6.5, 13, 26, 52, 104) / 60
 
-# -----------------------------------------------------------------
+#######################################################################
 # INPUT: 
 #   eyeSuiteJarLocation      = dir name containing EyeSuite Jar files
 #   eyeSuiteSettingsLocation = dir name containing EyeSuite settings
@@ -57,6 +152,7 @@ GOLDMAN <- c(6.5, 13, 26, 52, 104) / 60
 # @return 1 if already initialised
 # @return 2 if failed to make ready
 #
+#######################################################################
 octo900.opiInitialize <- function(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocation=NA, eye=NA) {
     if (is.na(eyeSuiteJarLocation))
         stop("You must specify the EyeSuite jar file folder in your call to opiInitialize")
@@ -91,48 +187,9 @@ octo900.opiInitialize <- function(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocati
 }
 
 ###########################################################################
-# Get values for fixation, color and bg intensity constants
-# from EyeSuite classes, and set globals
-#       opi.O900.* 
-# to the values of those constants.
-# INPUT: None.
-# OUTPUT: None.
-# SIDE EFFECTS: sets opi.O900.* if possible.
-###########################################################################
-setupBackgroundConstants <- function() {
-    f <- .jfields("com.hs.eyesuite.ext.extperimetryviewer.peristatic.data.exam.Const")
-
-        #
-        # check if cName exists as a field in f. If so, set 
-        # opi.O900.cName <- class value for cName
-        #
-    getC <- function(cName) {
-        if (length(grep(cName, f)) > 0) 
-            assign(paste("opi.O900.",cName,sep=""),
-                   .jfield("com.hs.eyesuite.ext.extperimetryviewer.peristatic.data.exam.Const",NULL,cName), 
-                   envir = .GlobalEnv)
-    }
-
-    getC("FIX_CENTRE")
-    getC("FIX_CROSS")
-    getC("FIX_RING")
-    getC("BG_OFF")
-    getC("BG_1")
-    getC("BG_10")
-    getC("BG_100")
-    getC("BG_125")
-    getC("BG_150")
-    getC("COL_WHITE")
-    getC("COL_BLUE")
-    getC("COL_YELLOW")
-    getC("COL_RED")
-    getC("COL_GREEN")
-    getC("COL_USER")
-}
-
-###########################################################################
 # INPUT: 
-#   as per OPI spec
+#   As per OPI spec
+#   stim$color must be same as that initialised by opiSetBackground or opiInitialize
 #
 # Return a list of 
 #	err  = string message
@@ -148,7 +205,7 @@ octo900.opiPresent.opiStaticStimulus <- function(stim, nextStim) {
         nextObj <- .jnull("opi/OpiStaticStimulus")
     } else {
         stimObj <- .jnew("opi/OpiStaticStimulus", stim$x*10.0, stim$y*10.0, cdTodb(stim$level)*10.0)
-        nextObj <- .jnew("opi/OpiStaticStimulus", nextStim$x*10.0, nextStim$y*10.0, nextStim$level) # level no matter
+        nextObj <- .jnew("opi/OpiStaticStimulus", nextStim$x*10.0, nextStim$y*10.0, 0) # level no matter
 	    .jcall(stimObj, "V", "setSize", as.double(which.min(abs(GOLDMAN - stim$size))))
 	    .jcall(stimObj, "V", "setDuration", as.double(stim$duration))
 	    .jcall(stimObj, "V", "setResponseWindow", as.double(stim$responseWindow))
@@ -159,8 +216,6 @@ octo900.opiPresent.opiStaticStimulus <- function(stim, nextStim) {
 
     if(min(abs(GOLDMAN - stim$size)) != 0)
         warning("opiPresent: Rounding stimulus size to nearest Goldmann size")
-
-    # ret <- .jcall(opi.global.octopusObject, "Lopi/OpiPresentReturn;", "opiPresent", stimObj, nextObj)
 
     done <- FALSE
     while (!done) {
@@ -189,22 +244,36 @@ octo900.opiPresent.opiKineticStimulus <- function(stim, nextStim=NULL, ...) {
 ###########################################################################
 #
 # Input paras are the opi.O900.* constants
+# lum is in cd/m^2 (as per OPI spec) * 100 == opi.O900.BG_{OFF | 1 | 10 | 100 }
+# color is opi.O900.MET_COL_{WW | BY | RW | BLUE_WHITE | RED_YELLOW | WHITE_YELLOW }
+# fixation is opi.O900.FIX_{RING | CROSS | CENTRE}
+# fixIntensity is 0..100 %
 #
 # @return NULL is succeed.
 # @return -1 if opiInitialize has not been successfully called
 # @return -2 trouble setting backgound color
 # @return -3 trouble setting fixation
 ###########################################################################
-octo900.opiSetBackground <- function(lum=NA, color=NA, fixation=NA, fixIntensity) {
-    ret <- .jcall(opi.global.octopusObject, "I", "opiSetBackground", 
-            as.double(lum), 
-            as.double(color), 
-            as.double(fixation), 
-            as.double(fixIntensity))
-    if (ret == 0)
-        return(NULL)
-    else
+octo900.opiSetBackground <- function(lum=NA, color=NA, fixation=NA, fixIntensity=50) {
+    ret <- 0
+    if (!is.na(color)) {
+        if (!is.na(lum))
+            ret <- .jcall(opi.global.octopusObject, "I", "opiSetBackground", as.double(color), as.double(lum*100.0))
+        else
+            ret <- .jcall(opi.global.octopusObject, "I", "opiSetBackground", as.double(color))
+    }
+
+    if (ret != 0)
         return(ret)
+
+    if (!is.na(fixation))
+        ret <- .jcall(opi.global.octopusObject, "I", "opiSetFixation", as.double(fixation), as.double(fixIntensity))
+
+    if (ret == 0) {
+        return(NULL)
+    } else {
+        return(ret)
+    }
 }
 
 ###########################################################################
@@ -213,4 +282,12 @@ octo900.opiSetBackground <- function(lum=NA, color=NA, fixation=NA, fixIntensity
 octo900.opiClose <- function() {
     ret <- .jcall(opi.global.octopusObject, "I", "opiClose")
     return(NULL)
+}
+
+###########################################################################
+# Call opiPresent with a NULL stimulus
+###########################################################################
+octo900.opiQueryDevice <- function() {
+    ret <- octo900.opiPresent.opiStaticStimulus(NULL, NULL)
+    return(ret$err)
 }

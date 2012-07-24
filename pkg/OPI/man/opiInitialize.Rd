@@ -53,6 +53,15 @@ opiInitialize(...)
 \value{
 Returns NULL if initialization succeeded, 
 otherwise an implementation dependant error.
+
+\subsection{Octopus900}{
+Returns NULL if successful, 1 if Octopus900 is already initialised by a previous call to 
+\code{opiInitialize}, and 2 if some error occured that prevented ininitialisation.
+
+The default background and stimulus setup is to white-on-white perimetry. Use \code{opiSetBackground}
+to change the background and stimulus colors.
+}
+
 }
 \references{
 http://perimetry.org/OPI
@@ -68,7 +77,10 @@ Andrew Tuprin <aturpin@unimelb.edu.au>
 }
 
 \seealso{
-\code{\link{chooseOpi}}
+\code{\link{chooseOpi}},
+\code{\link{opiSetBackground}},
+\code{\link{opiClose}},
+\code{\link{opiPresent}}
 }
 
 \examples{
