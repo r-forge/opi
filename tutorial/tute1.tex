@@ -1,6 +1,6 @@
 \documentclass{article}
 
-\title{A beginners guide to the OPI in R}
+\title{A beginners guide to the OPI in R\\DRAFT ONLY}
 \date{July 2012}
 \author{Andrew Turpin aturpin@unimelb.edu.au}
 
@@ -10,7 +10,7 @@
 \section{Notation}
 
 Code will be in typewriter font like {\tt this}.
-Commands will be preceeded by a {\tt >}. You should not enter the {\tt >} in your code: it is
+Commands will be preceded by a {\tt >}. You should not enter the {\tt >} in your code: it is
 the command prompt.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -39,7 +39,7 @@ Engineering to get the rHep package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{First try}
 
-Assuming you have the OPI package installed, and any other nevessary
+Assuming you have the OPI package installed, and any other necessary
 packages for controlling an external machine, you are ready to go.
 
 First you must load the libraries with the {\tt library} or {\tt
@@ -63,7 +63,7 @@ calling {\tt chooseOPI} with an argument of {\tt NULL}.
 [1] TRUE
 \end{verbatim}
 
-This shows us that there are three implementations available. Letâ€™s choose
+This shows us that there are three implementations available. Letâ us choose
 the Octopus900 one.
 
 \begin{verbatim}
@@ -121,7 +121,7 @@ opiStaticStimulus} object, which is just a list of named values.
                           
 [[ TODO - add more here. ]]
 
-Finally, you chould close the OPI implementation. This is especially important for the Octopus
+Finally, you should close the OPI implementation. This is especially important for the Octopus
 900 as EyeSuite will not function if the OPI has hold of the machine.
 
 \begin{verbatim}
