@@ -1,22 +1,28 @@
 \documentclass{article}
+\usepackage{a4wide}
 
-\title{A beginners guide to the OPI in R\\DRAFT ONLY}
+\title{A beginners guide to the OPI in R}
 \date{July 2012}
 \author{Andrew Turpin aturpin@unimelb.edu.au}
 
 \begin{document}
 \maketitle
 
+This document is written as an introduction to the OPI in R primarily
+using the Octopus 900 for examples.
+
 \section{Notation}
 
 Code will be in typewriter font like {\tt this}.
 Commands will be preceded by a {\tt >}. You should not enter the {\tt >} in your code: it is
-the command prompt.
+the command prompt. Command continuations begin with a {\tt +}, you shouldn't enter these
+either.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Installing}
 \label{sec-install}
 
+The OPI package will be in CRAN soon, I hope. In the meantime you have to install from source.
 Inside R type the following.
 
 \begin{verbatim}
@@ -31,13 +37,13 @@ function is a valid path name to the package files.
 Also make sure you have the {\tt rJava} package installed if you
 want to use the Octopus 900 or the HEP. You need permission from
 HAAG-STREIT to get the OPIOctopus900 package, and from Heidelberg
-Engineering to get the rHep package.
+Engineering to get the Rhep package.
 
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{First try}
+\section{Your first stimulus}
 
 Assuming you have the OPI package installed, and any other necessary
 packages for controlling an external machine, you are ready to go.
@@ -74,7 +80,7 @@ Loading required package: OPIOctopus900
 
 Note that choosing this implementation also loaded the required package
 OPIOctopus900. If you do not have this package, then you cannot control the
-Octopus 900. See Section~\ref{sec-install}.
+Octopus 900; see Section~\ref{sec-install}.
 
 Once an OPI implementation is chosen, you need to execute opiInitialize.
 Depending on your implementation, different arguments are required for this
@@ -100,12 +106,34 @@ This command should return NULL if successful.
 
 Note that if the Octopus 900 has just been turned on, there will
 be a short delay before this function returns while the machine is
-calibrated. You should hear whirring and clicking noises from the machine.
+calibrated. You should hear whirring and clicking noises from the
+machine.  Also make sure that EyeSuite is not trying to use the
+Octopus 900 at the same time (close EyeSuite).
 
 Now you can present a stimuli, and get a response. A stimuli is specified with a {\tt
-opiStaticStimulus} object, which is just a list of named values.
+opiStaticStimulus} object, which is just a list of named values with a class of {\tt
+opiStaticStimulus}. For example, 
 
-[[ TODO - add more here. ]]
+\begin{verbatim}
+    # Specify a 17 dB stimulus at $(9,9)$ for 200ms, and 
+    # wait for 1500ms to see if there is a button press.
+>  s <- list(x=9, y=9, level=dbTocd(17), size=0.43, duration=200, 
++            responseWindow=1500)
+>  class(s) <- "opiStaticStimulus"
+\end{verbatim}
+
+The full documentation of {\tt opiStaticStimulus} is in the
+OPI Standard document, and in the help files (remember {\tt
+?opiStaticStimulus}).
+
+Note the use of the function {\tt dbTocd} for converting db values
+in to cd/m$^2$, which is what an {\tt opiStaticStimulus} should
+specify the stimulus level in. There is also a {\tt cdTodb} function.
+
+Often it is useful to have a helper function to construct the {\tt
+opiStaticStimulus} for you, to save lots of typing. For example,
+this function that takes in a dB value, and builds a stimulus at
+location (9,9) for that dB value.
 
 \begin{verbatim}
 >   makeStim <- function(db) {
@@ -115,11 +143,17 @@ opiStaticStimulus} object, which is just a list of named values.
 +
 +        return(s)
 +    }
+\end{verbatim}            
 
+Now that you have a stimulus, you can present it with {\tt opiPresent} as follows.
+\begin{verbatim}
 > opiPresent(makeStim(0), makeStim(0))
 \end{verbatim}            
-                          
-[[ TODO - add more here. ]]
+This will only work if you have successfully run {\tt opiInitialize}.
+Note that {\tt opiPresent} takes two stimulus arguments: the first is the one to present, and
+the second is the one that will be presented next. This allows the projector to be moved to
+the next location during the response window of the current stimulus.
+In our example we simply made them at the same location, but usually this will not be the case.
 
 Finally, you should close the OPI implementation. This is especially important for the Octopus
 900 as EyeSuite will not function if the OPI has hold of the machine.
@@ -127,6 +161,84 @@ Finally, you should close the OPI implementation. This is especially important f
 \begin{verbatim}
 > opiClose()
 \end{verbatim}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Changing backgrounds and colors}
+
+On the Octopus 900, {\tt opiPresent} ignores the {\tt color} field in the {\tt
+opiStaticStimulus} list, and only presents stimuli of the current
+set color.
+{\tt opiInitialize} sets the background and
+stimulus to the standard white-on-white settings.
+
+If you want to change the stimulus color, or the background from
+white to yellow, you must use {\tt opiSetBackgound}. There are 3
+possible stimulus colors, and two possible background colors, so
+there are 6 combinations, as shown in Table~\ref{tab-met-col}.
+You can choose one of these with the {\tt opiSetBackgound} function, specifying the {\tt color}
+argument as one of the constants in the final column.
+For example,
+\begin{verbatim}
+> opiSetBackgound(color=opi.O900.MET_COL_BW)
+\end{verbatim}
+
+\begin{table}
+\centering
+\begin{tabular}{ccc}
+\hline
+Stimulus & Background & OPI Constant \\
+\hline
+White    & White & opi.O900.MET\_COL\_WW \\
+Blue     & White & opi.O900.MET\_COL\_BW \\
+Red      & White & opi.O900.MET\_COL\_RW \\
+White    & Yellow & opi.O900.MET\_COL\_WY \\
+Blue     & Yellow & opi.O900.MET\_COL\_BY \\
+Red      & Yellow & opi.O900.MET\_COL\_RY \\
+\hline
+\end{tabular}
+\caption{\label{tab-met-col}Six possible color combinations on the Octopus 900}
+\end{table}
+
+You can also change the luminance of the background with the {\tt lum} argument of the {\tt
+opiSetBackgound} function. It is in cd/m$^2$.
+For example,
+\begin{verbatim}
+> opiSetBackgound(lum=0)    # turn the background light off
+> opiSetBackgound(lum=100)  # turn the background to 100 cd/m2
+\end{verbatim}
+See {\tt ?opiSetBackgound} for more information.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Changing fixation markers}
+
+The Octopus 900, has 3 possible fixation targets
+\begin{verbatim}
+opi.O900.FIX_RING
+opi.O900.FIX_CROSS
+opi.O900.FIX_CENTRE
+\end{verbatim}
+and each can be the {\tt fixation} argument of {\tt opiSetBackgound}. For example, 
+\begin{verbatim}
+opiSetBackgound(fixation=opi.O900.FIX_RING)
+\end{verbatim}
+
+You can also set the intensity of the fixation marker as a percentage from 0 to 100 using the
+{\tt fixIntensity} argument. 
+For example,
+\begin{verbatim}
+> opiSetBackgound(fixIntensity=0)    # turn fixation marker off
+> opiSetBackgound(fixIntensity=100)  # fixation marker is brightest
+\end{verbatim}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Built-In Test Procedures}
+
+The OPI has Full Threshold (FT).
+See {\tt ?FT}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
 
