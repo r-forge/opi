@@ -30,6 +30,10 @@ and returns an OPI datatype ready for passing to opiPresent
 Extra parameters to pass to the opiPresent function
 }
 }
+\details{
+    Note this function will repeatedly call \code{opiPresent} for a stimulus 
+    until \code{opiPresent} returns \code{NULL} (ie no error occured).
+}
 \value{
 Returns a list containing
 \item{npres}{Total number of presentations}

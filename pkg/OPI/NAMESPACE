@@ -1,6 +1,7 @@
 
 #exportPattern("^[[:alpha:]]+")
 
+export(ZEST)
 export(FT)
 export(chooseOpi)
 export(dbTocd, cdTodb)

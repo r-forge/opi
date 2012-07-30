@@ -42,6 +42,8 @@ simH.opiInitialize <- function(type="C", cap=6) {
         return(msg)
     }
 
+    if (cap < 0)
+        warning("cap is negative in call to opiInitialize (simHenson)")
     assign("simH.global.type", type, envir = .GlobalEnv)
     assign("simH.global.cap",  cap , envir = .GlobalEnv)
 
@@ -51,14 +53,15 @@ simH.opiInitialize <- function(type="C", cap=6) {
 ################################################################################
 #
 ################################################################################
-simH.opiPresent <- function(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30) { UseMethod("simH.opiPresent") }
+simH.opiPresent <- function(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30) { 
+                            UseMethod("simH.opiPresent") }
 setGeneric("simH.opiPresent")
 
 #
 # Helper function that allows different coefficients from Table 1 of Henson 2000.
 #
 simH.present <- function(db, cap=6, fpr=0.03, fnr=0.01, tt=30, A, B) {
-    pxVar <- min(cap, exp(A*db + B)) # variability of patient, henson formula 
+    pxVar <- min(cap, exp(A*tt + B)) # variability of patient, henson formula 
 
     prSeeing <- fpr + (1-fpr-fnr)*(1-pnorm(db, mean=tt, sd=pxVar))    
 
@@ -80,6 +83,16 @@ simH.opiPresent.opiStaticStimulus <- function(stim, nextStim=NULL, fpr=0.03, fnr
             time= NA 
         ))
     }
+
+    if (is.null(stim))
+        stop("stim is NULL in call to opiPresent (using simHenson, opiStaticStimulus)")
+
+    if (length(tt) != length(fpr))
+        warning("In opiPresent (using simHenson), recycling tt or fpr as lengths differ")
+    if (length(tt) != length(fnr))
+        warning("In opiPresent (using simHenson), recycling tt or fnr as lengths differ")
+    if (length(fpr) != length(fnr))
+        warning("In opiPresent (using simHenson), recycling fpr or fnr as lengths differ")
 
     if (.GlobalEnv$simH.global.type == "N") {
         return(simH.present(cdTodb(stim$level), .GlobalEnv$simH.global.cap, fpr, fnr, tt, -0.066, 2.81))
