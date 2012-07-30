@@ -8,7 +8,7 @@ ZEST
 An implementation of the Bayesian test procedure of King-Smith et al.
 }
 \usage{
-ZEST(domain=0:40, prior=rep(1/40,41), 
+ZEST(domain=0:40, prior=rep(1/length(domain),length(domain)), 
      likelihood=sapply(0:40, function(tt) { 0.03 + (1-0.03-0.03)*(1-pnorm(0:40, tt, 1)) }),
      stopType="S", stopValue=1.5,
      maxSeenLimit=2, minNotSeenLimit=2,
