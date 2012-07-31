@@ -70,7 +70,7 @@ Returns a list containing
 \item{respSeq}{Response sequence stored as a list of (stimulus, seen) pairs.}
 \item{pdfs}{If \code{verbose} is bigger than 0, then this is a list of the pdfs used for each presentation,
 otherwise NULL.}
-\item{final}{The mean of the final pdf, which is the threshold returned.}
+\item{final}{The mean/median/mode of the final pdf, depending on \code{stimChoice}, which is the determined threshold.}
 }
 \references{
 
@@ -78,6 +78,11 @@ P.E. King-Smith, S.S. Grigsny, A.J. Vingrys, S.C. Benes, and A.
 Supowit.  "Efficient and Unbiased Modifications of the QUEST Threshold
 Method: Theory, Simulations, Experimental Evaluation and Practical
 Implementation", Vision Research 34(7) 1994. Pages 885-912.
+
+A.B. Watson and D.G. Pelli. 
+"QUEST: A Bayesian adaptive psychophysical method", 
+Perception and Psychophysics 33 1983. 
+Pages 113-l20.
 
 http://perimetry.org/OPI
 }

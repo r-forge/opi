@@ -92,8 +92,12 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
     while(keepGoing) {
         if (stimChoice == "mean") {
             stimIndex <- which.min(abs(domain - sum(pdf * domain)))
+        } else if (stimChoice == "mode") {
+            stimIndex <- which.max(pdf)
+        } else if (stimChoice == "median") {
+            stimIndex <- which.min(abs(cumsum(pdf) - 0.5))
         } else {
-            stop(paste("stimChoice = ",stimChoice," not implemented"))
+            stop(paste("ZEST: stimChoice = ",stimChoice," not implemented."))
         }
         stim <- domain[stimIndex]
         opiResp <- opiPresent(stim=makeStim(stim, numPres), nextStim=NULL, ...)
@@ -133,33 +137,49 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
         )
     }# end presentation loop
 
+    if (stimChoice == "mean") {
+        final <- sum(pdf*domain)
+    } else if (stimChoice == "mode") {
+        final <- domain[which.max(pdf)]
+    } else if (stimChoice == "median") {
+        final <- domain[which.min(abs(cumsum(pdf) - 0.5))]
+    } 
     return(list(
         npres=length(fullResponseSeq),    # number of presentations
         respSeq=fullResponseSeq,          # reposnse sequence (list of pairs)
         pdfs=pdfs,                        # list of pdfs used (if verbose > 0)
-        final=sum(pdf*domain)             # final threshold estimate
+        final=final                       # final threshold estimate
     ))
 }#ZEST()
 
 ############################################################
 # Tests
 ############################################################
-##makeStim <- function(db, n) { 
-##         s <- list(x=9, y=9, level=dbTocd(db), size=0.43, color="white",
-##                  duration=200, responseWindow=1500)
-##         class(s) <- "opiStaticStimulus"
-##     
-##         return(s)
-##     }
-##
-##a <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stopType="H", stopValue=  3, verbose=0, tt=50, fpr=0.03))
-##b <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stopType="S", stopValue=1.5, verbose=0, tt=50, fpr=0.03))
-##c <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stopType="S", stopValue=2.0, verbose=0, tt=50, fpr=0.03))
-##d <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stopType="N", stopValue= 50, verbose=0, tt=50, fpr=0.03))
-##
-##layout(matrix(1:2,1,2))
-##boxplot(lapply(list(a,b,c,d), function(x) unlist(x["final",])))
-##boxplot(lapply(list(a,b,c,d), function(x) unlist(x["npres",])))
+require(OPI)
+chooseOpi("SimHenson")
+opiInitialize("C",6)
+
+makeStim <- function(db, n) { 
+         s <- list(x=9, y=9, level=dbTocd(db), size=0.43, color="white",
+                  duration=200, responseWindow=1500)
+         class(s) <- "opiStaticStimulus"
+     
+         return(s)
+     }
+
+#a <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stopType="H", stopValue=  3, verbose=0, tt=20, fpr=0.03))
+#b <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stopType="S", stopValue=1.5, verbose=0, tt=20, fpr=0.03))
+#c <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stopType="S", stopValue=2.0, verbose=0, tt=20, fpr=0.03))
+#d <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stopType="N", stopValue= 50, verbose=0, tt=20, fpr=0.03))
+
+a <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stimChoice="mean", tt=20, fpr=0.03))
+b <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stimChoice="mode", tt=20, fpr=0.03))
+c <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stimChoice="median", tt=20, fpr=0.03))
+d <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stimChoice="mean", tt=20, fpr=0.03))
+
+layout(matrix(1:2,1,2))
+boxplot(lapply(list(a,b,c,d), function(x) unlist(x["final",])))
+boxplot(lapply(list(a,b,c,d), function(x) unlist(x["npres",])))
 ##
 ##
 ##a <- sapply(1:100, function(i) ZEST(makeStim=makeStim, prior=dnorm(0:40,m=0,s=5), tt=30, fpr=0.03))
