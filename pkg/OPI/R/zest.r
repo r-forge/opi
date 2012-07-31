@@ -155,31 +155,31 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
 ############################################################
 # Tests
 ############################################################
-require(OPI)
-chooseOpi("SimHenson")
-opiInitialize("C",6)
-
-makeStim <- function(db, n) { 
-         s <- list(x=9, y=9, level=dbTocd(db), size=0.43, color="white",
-                  duration=200, responseWindow=1500)
-         class(s) <- "opiStaticStimulus"
-     
-         return(s)
-     }
-
+#require(OPI)
+#chooseOpi("SimHenson")
+#opiInitialize("C",6)
+#
+#makeStim <- function(db, n) { 
+#         s <- list(x=9, y=9, level=dbTocd(db), size=0.43, color="white",
+#                  duration=200, responseWindow=1500)
+#         class(s) <- "opiStaticStimulus"
+#     
+#         return(s)
+#     }
+#
 #a <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stopType="H", stopValue=  3, verbose=0, tt=20, fpr=0.03))
 #b <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stopType="S", stopValue=1.5, verbose=0, tt=20, fpr=0.03))
 #c <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stopType="S", stopValue=2.0, verbose=0, tt=20, fpr=0.03))
 #d <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stopType="N", stopValue= 50, verbose=0, tt=20, fpr=0.03))
-
-a <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stimChoice="mean", tt=20, fpr=0.03))
-b <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stimChoice="mode", tt=20, fpr=0.03))
-c <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stimChoice="median", tt=20, fpr=0.03))
-d <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stimChoice="mean", tt=20, fpr=0.03))
-
-layout(matrix(1:2,1,2))
-boxplot(lapply(list(a,b,c,d), function(x) unlist(x["final",])))
-boxplot(lapply(list(a,b,c,d), function(x) unlist(x["npres",])))
+#
+#a <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stimChoice="mean", tt=20, fpr=0.03))
+#b <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stimChoice="mode", tt=20, fpr=0.03))
+#c <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stimChoice="median", tt=20, fpr=0.03))
+#d <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stimChoice="mean", tt=20, fpr=0.03))
+#
+#layout(matrix(1:2,1,2))
+#boxplot(lapply(list(a,b,c,d), function(x) unlist(x["final",])))
+#boxplot(lapply(list(a,b,c,d), function(x) unlist(x["npres",])))
 ##
 ##
 ##a <- sapply(1:100, function(i) ZEST(makeStim=makeStim, prior=dnorm(0:40,m=0,s=5), tt=30, fpr=0.03))
