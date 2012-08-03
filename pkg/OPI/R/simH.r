@@ -5,7 +5,7 @@
 # Author: Andrew Turpin    (aturpin@unimelb.edu.au)
 # Date: June 2012
 #
-# Copyright 2012 Andrew Turpin and Jonathan Denniss
+# Copyright 2012 Andrew Turpin
 # This program is part of the OPI (http://perimetry.org/OPI).
 # OPI is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,20 +22,20 @@
 #
 
 simH.opiClose         <- function() { return(NULL) }
-simH.opiSetBackground <- function() { return(NULL) }
 simH.opiQueryDevice   <- function() { return (list(type="SimHenson")) }
 
-simH.global.type <- NA
-simH.global.cap  <- NA
+assign("simH.global.cap"    ,  NA  , envir = .GlobalEnv)
+assign("simH.global.type"   ,  NA  , envir = .GlobalEnv)
 
 ################################################################################
 # Input
 #   type N|G|C for the three Henson params
 #   cap  dB value for capping stdev form Henson formula
+#   display Dimensions of plot area to display stim. No display if NULL
 #
 # Return NULL if succesful, string error message otherwise  
 ################################################################################
-simH.opiInitialize <- function(type="C", cap=6) {
+simH.opiInitialize <- function(type="C", cap=6, display=NULL) {
     if (!is.element(type,c("N","G","C"))) {
         msg <- paste("Bad 'type' specified for SimHenson in opiInitialize():",type)
         warning(msg)
@@ -47,7 +47,20 @@ simH.opiInitialize <- function(type="C", cap=6) {
     assign("simH.global.type", type, envir = .GlobalEnv)
     assign("simH.global.cap",  cap , envir = .GlobalEnv)
 
+    if(simDisplay.setupDisplay(display))
+        warning("opiInitialize (SimHenson): display parameter may not contain 4 numbers.")
+
     return(NULL)
+}
+
+################################################################################
+# Set background of plot area to col
+# Return:
+#   NULL - succsess
+#   -1   - opiInitialize not called
+################################################################################
+simH.opiSetBackground <- function(col, gridCol) { 
+    return (simDisplay.setBackground(col, gridCol))
 }
 
 ################################################################################
@@ -94,6 +107,8 @@ simH.opiPresent.opiStaticStimulus <- function(stim, nextStim=NULL, fpr=0.03, fnr
     if (length(fpr) != length(fnr))
         warning("In opiPresent (using simHenson), recycling fpr or fnr as lengths differ")
 
+    simDisplay.present(stim$x, stim$y, stim$color, stim$duration, stim$responseWindow)
+
     if (.GlobalEnv$simH.global.type == "N") {
         return(simH.present(cdTodb(stim$level), .GlobalEnv$simH.global.cap, fpr, fnr, tt, -0.066, 2.81))
     } else if (.GlobalEnv$simH.global.type == "G") {
@@ -117,3 +132,4 @@ simH.opiPresent.opiTemporalStimulus <- function(stim, nextStim=NULL, ...) {
 simH.opiPresent.opiKineticStimulus <- function(stim, nextStim=NULL, ...) {
     stop("ERROR: haven't written simH kinetic persenter yet")
 }
+

@@ -1,0 +1,19 @@
+OPI 1.0
+  - experimental, lots of bugs.
+  - not really a proper R package
+
+OPI 1.1
+  - Correct R package structure
+  - Introduced chooseOpi()
+  - Split out Octopus 900 functions into OPIOctopus900 package
+  - Contains Tutorial and pdf Manual
+  - Contains FT()
+
+OPI 1.2
+  - contains ZEST()
+  - Fixed a bug in SimHenson opiPresent()
+
+OPI 1.2.1
+  - Contains simDisplay to allow displaying of stims on a plot 
+    in simulation mode.
+

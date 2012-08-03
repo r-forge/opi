@@ -16,7 +16,7 @@ opiInitialize(...)
 }
 \details{
 \subsection{SimHenson}{
-    \code{opiInitialize(type="C", cap=6)}
+    \code{opiInitialize(type="C", cap=6, display=NULL)}
 
     If the chosen OPI implementation is \code{SimHenson}, then
   \code{type} can be one of:
@@ -26,13 +26,22 @@ opiInitialize(...)
     \code{cap} is the maximum
     standard deviation value that the simulator will use for
     the slope/spread of the psychometric function.
+
+    If \code{display} is a vector of four numbers \code{c(xlow, xhi, ylow, yhi)}, then 
+    a plot area is created of dimension \code{xlim=range(xlow, xhi)} and 
+    \code{ylim=range(ylow, yhi)} and each call to \code{opiPresent} will
+    display a point on the area.
+    The color of the plot area can be set with \code{opiSetBackground}, and the 
+    color of the displayed point is determined by the stimulus passed to \code{opiPresent}.
 }
 \subsection{SimGaussian}{
-    \code{opiInitialize(sd)}
+    \code{opiInitialize(sd, display=NULL)}
 
     If the chosen OPI implementation is \code{SimGaussian}, then \code{sd}
     is the standard deviation value that the simulator will use for 
     the slope/spread of the psychometric function.
+
+    \code{display} is as for SimHenson.
 }
 \subsection{Octopus900}{
     \code{opiInitialize(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocation=NA, eye=NA)}
@@ -84,15 +93,25 @@ Andrew Tuprin <aturpin@unimelb.edu.au>
 }
 
 \examples{
+    # Set up a simple simulation for white-on-white perimetry
 chooseOpi("SimHenson")
 if (!is.null(opiInitialize(type="C", cap=6)))
     stop("opiInitialize failed")
 
+    # Set up a simple simulation for white-on-white perimetry
+    # and display the stimuli in a plot region
+chooseOpi("SimHenson")
+if (!is.null(opiInitialize(type="C", cap=6, display=c(-30,30,-30,30))))
+    stop("opiInitialize failed")
+
+    # Set up a simulation using a psychometric function that is
+    # a cumulative gaussian of standard deviation 2
 chooseOpi("SimGaussian")
 if (!is.null(opiInitialize(sd=2)))
     stop("opiInitialize failed")
 
 \dontrun{
+    # Set up the Octopus 900
 chooseOpi("Octopus900")
 if (!is.null(opiInitialize(
         "C:/EyeSuite/", 

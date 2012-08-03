@@ -49,8 +49,15 @@ opiSetBackground(...)
     \item\code{fixIntensity} is a percentage between 0 and 100. 0 is off, 100 the brightest.
   }
 }
-\subsection{SimHenson}{ \code{opiSetBackground} has no arguments and no effect.  }
-\subsection{SimGaussian}{ \code{opiSetBackground} has no arguments and no effect.  }
+\subsection{SimHenson and SimGaussian}{ 
+    \code{opiSetBackground(col, gridCol)} 
+
+    \code{col} is the background color of the
+    plot area used for displaying stimuli, and \code{gridCol} the color of the gridlines.  
+    Note the plot area will
+    only be displayed if \code{opiInitialize} is called with a valid
+    display argument.
+}
 }
 
 \value{
@@ -78,9 +85,9 @@ Andrew Tuprin <aturpin@unimelb.edu.au>
 
 \examples{
 chooseOpi("SimGaussian")
-if (!is.null(opiInitialize(sd=2)))
+if (!is.null(opiInitialize(sd=2, display=c(-30,30,-30,30))))
     stop("opiInitialize failed")
-if (!is.null(opiSetBackground()))
+if (!is.null(opiSetBackground("white","grey")))
     stop("opiSetBackground failed, which is very surprising!")
 
 \dontrun{
