@@ -205,13 +205,17 @@ octo900.opiPresent.opiStaticStimulus <- function(stim, nextStim) {
         nextObj <- .jnull("opi/OpiStaticStimulus")
     } else {
         stimObj <- .jnew("opi/OpiStaticStimulus", stim$x*10.0, stim$y*10.0, cdTodb(stim$level)*10.0)
-        nextObj <- .jnew("opi/OpiStaticStimulus", nextStim$x*10.0, nextStim$y*10.0, 0) # level no matter
 	    .jcall(stimObj, "V", "setSize", as.double(which.min(abs(GOLDMAN - stim$size))))
 	    .jcall(stimObj, "V", "setDuration", as.double(stim$duration))
 	    .jcall(stimObj, "V", "setResponseWindow", as.double(stim$responseWindow))
-	    .jcall(nextObj, "V", "setSize", as.double(which.min(abs(GOLDMAN - nextStim$size))))
-	    .jcall(nextObj, "V", "setDuration", as.double(nextStim$duration))
-	    .jcall(nextObj, "V", "setResponseWindow", as.double(nextStim$responseWindow))
+        if (is.null(nextStim)) {
+            nextObj <- .jnull("opi/OpiStaticStimulus")
+        } else {
+            nextObj <- .jnew("opi/OpiStaticStimulus", nextStim$x*10.0, nextStim$y*10.0, 0) # level no matter
+	        .jcall(nextObj, "V", "setSize", as.double(which.min(abs(GOLDMAN - nextStim$size))))
+	        .jcall(nextObj, "V", "setDuration", as.double(nextStim$duration))
+	        .jcall(nextObj, "V", "setResponseWindow", as.double(nextStim$responseWindow))
+        }
     }
 
     if(min(abs(GOLDMAN - stim$size)) != 0)

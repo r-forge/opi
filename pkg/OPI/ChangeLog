@@ -16,4 +16,8 @@ OPI 1.2
 OPI 1.2.1
   - Contains simDisplay to allow displaying of stims on a plot 
     in simulation mode.
+  - removed nextStim=NULL bug in opiPresent.opiStaticStimulus octopus900.r
+
+OPI 1.2.1.1
+  - as for 1.2.1 but with depends rJava removed from Description
 
