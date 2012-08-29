@@ -21,3 +21,5 @@ OPI 1.2.1
 OPI 1.2.1.1
   - as for 1.2.1 but with depends rJava removed from Description
 
+OPI 1.2.2
+  - Contains multi-location ZEST
