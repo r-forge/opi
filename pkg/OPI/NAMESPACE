@@ -2,6 +2,10 @@
 #exportPattern("^[[:alpha:]]+")
 
 export(ZEST)
+export(ZEST.start)
+export(ZEST.step)
+export(ZEST.stop)
+export(ZEST.final)
 export(FT)
 export(chooseOpi)
 export(dbTocd, cdTodb)
