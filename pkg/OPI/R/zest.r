@@ -6,8 +6,6 @@
 #     ZEST.step     # take state, present stim, update and return state
 #     ZEST.stop     # boolean - true if state is finished
 #     ZEST.final    # return final estimate from state
-#     ZEST.load     # load state
-#     ZEST.save     # save state
 #
 # Author: Andrew Turpin    (aturpin@unimelb.edu.au)
 # Date: August 2012
@@ -78,7 +76,8 @@ ZEST.start <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
 
     pdf <- prior/sum(prior)
 
-    return(list(domain=domain, 
+    return(list(name="ZEST",
+                domain=domain, 
                 pdf=pdf,
                 likelihood=likelihood, 
                 stopType=stopType,
@@ -309,6 +308,10 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
 #        stopType="S", stopValue= 1.5, tt=loc[3], fpr=0.03, fn=0.01)
 #})
 #
+#opi.procedure.save(states, "Zest_states.opi")
+
+#states <- opi.procedure.load("Zest_states.opi")
+
 #    # loop through until all states are "stop"
 #while(!all(st <- unlist(lapply(states, ZEST.stop)))) {
 #    i <- sample(which(!st), 1)  # choose a random, unstopped state

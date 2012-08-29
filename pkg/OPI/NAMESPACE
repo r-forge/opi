@@ -1,12 +1,17 @@
 
 #exportPattern("^[[:alpha:]]+")
 
+export(opi.procedure.load)
+export(opi.procedure.save)
+
 export(ZEST)
 export(ZEST.start)
 export(ZEST.step)
 export(ZEST.stop)
 export(ZEST.final)
+
 export(FT)
+
 export(chooseOpi)
 export(dbTocd, cdTodb)
 
