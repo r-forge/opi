@@ -9,4 +9,4 @@ Description: This package contains the current version of the Open Perimetry Int
 License: GPL-3
 URL: http://perimetry.org/OPI
 Suggests: OPIOctopus900
-Depends: methods, rJava
+Depends: methods,rJava
