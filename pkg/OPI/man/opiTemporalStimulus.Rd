@@ -34,6 +34,18 @@ Stimulus parameter list.
                     response from the onset of the stimulus presentation 
 \item[\code{...}] machine specific parameters 
 }
+
+\subsection{Octopus 900}{
+    \code{x} and \code{y} are in degrees, with precision to one decimal place recognised.
+
+    \code{image} is not possible on an Octopus 900.
+
+    \code{lut} is not possible on an Octopus 900. Stimulus is at 0 dB.
+
+    \code{rate} is in Hz, with precision to one decimal place recognised.
+
+    \code{color} is ignored. Use \code{opiSetBackground()} to alter stimulus color.
+}
 }
 
 \references{

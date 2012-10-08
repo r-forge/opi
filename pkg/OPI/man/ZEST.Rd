@@ -31,7 +31,7 @@ ZEST.start(domain=0:40, prior=rep(1/length(domain),length(domain)),
      makeStim, 
      stimChoice="mean",
      ...) 
-ZEST.step(state, nextStim=NULL, ...)
+ZEST.step(state, nextStim=NULL)
 ZEST.stop(state)
 ZEST.final(state)
 }
@@ -96,12 +96,20 @@ Extra parameters to pass to the opiPresent function
     See examples below.
 }
 \value{
+
+\subsection{Single location}{
+
 \code{ZEST} returns a list containing
+\itemize{
 \item{npres}{Total number of presentations used.}
 \item{respSeq}{Response sequence stored as a list of (stimulus, seen) pairs.}
 \item{pdfs}{If \code{verbose} is bigger than 0, then this is a list of the pdfs used for each presentation,
 otherwise NULL.}
 \item{final}{The mean/median/mode of the final pdf, depending on \code{stimChoice}, which is the determined threshold.}
+}
+}
+
+\subsection{Multilple locations}{
 
 \code{ZEST.start} returns a list that can be passed to 
 \code{ZEST.step},
@@ -109,8 +117,11 @@ otherwise NULL.}
 \code{ZEST.final}.
 
 \code{ZEST.step} returns a list containing
+\itemize{
 \item{state}{The new state after presenting a stimuli and getting a response.}
 \item{resp}{The return from the \code{opiPresent} call that was made.}
+}
+
 
 \code{ZEST.stop} returns \code{TRUE} is the ZEST has reached its stopping criteria, and \code{FALSE} otherwise.
 
@@ -118,6 +129,7 @@ otherwise NULL.}
 If \code{state$stimChoice} is \code{mean} then the mean is returned.
 If \code{state$stimChoice} is \code{mode} then the mode is returned.
 If \code{state$stimChoice} is \code{median} then the median is returned.
+}
 }
 \references{
 

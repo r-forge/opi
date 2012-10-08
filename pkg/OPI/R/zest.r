@@ -92,7 +92,8 @@ ZEST.start <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
                 numPresentations=0,                 # number of presentations so far
                 stimuli=NULL,                       # vector of stims shown
                 responses=NULL,                     # vector of responses (1 seen, 0 not)
-                responseTimes=NULL                  # vector of response times
+                responseTimes=NULL,                 # vector of response times
+                opiParams=list(...)                 # the extra params
             ))
 }# ZEST.start
 
@@ -102,7 +103,6 @@ ZEST.start <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
 # Input parameters
 #   State list as returned by ZEST.start
 #   nextStim - suitable for passing to opiPresent, can be NULL
-#   ...            Parameters for opiPresent
 # Returns a list containing
 #   state = updated state list
 #   resp  = response to the presentation (as returned by opiPresent)
@@ -111,7 +111,7 @@ ZEST.start <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
 #   1) stims are rounded to nearest domain entry 
 #   2) opiPresent called infinitely until no error
 ################################################################################
-ZEST.step <- function(state, nextStim=NULL,...) {
+ZEST.step <- function(state, nextStim=NULL) {
 
     if (state$stimChoice == "mean") {
         stimIndex <- which.min(abs(state$domain - sum(state$pdf * state$domain)))
@@ -123,9 +123,9 @@ ZEST.step <- function(state, nextStim=NULL,...) {
         stop(paste("ZEST.step: stimChoice = ",state$stimChoice," not implemented."))
     }
     stim <- state$domain[stimIndex]
-    opiResp <- opiPresent(stim=state$makeStim(stim, state$numPresentations), nextStim=nextStim, ...)
+    opiResp <- do.call(opiPresent, c(list(stim=state$makeStim(stim, state$numPresentations), nextStim=nextStim), state$opiParams))
     while (!is.null(opiResp$err))
-        opiResp <- opiPresent(stim=state$makeStim(stim, state$numPresentations), nextStim=nextStim, ...)
+        opiResp <- do.call(opiPresent, c(list(stim=state$makeStim(stim, state$numPresentations), nextStim=nextStim), state$opiParams))
     state$stimuli          <- c(state$stimuli, stim)
     state$responses        <- c(state$responses, opiResp$seen)
     state$responseTimes    <- c(state$responseTimes, opiResp$time)
@@ -229,7 +229,7 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
 
     pdfs <- NULL
     while(!ZEST.stop(state)) {
-        r <- ZEST.step(state, ...)
+        r <- ZEST.step(state)
         state <- r$state
         if (verbose == 2) {
             cat(sprintf("Presentation %2d: ", state$numPresentations))
@@ -275,9 +275,9 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
 #         return(s)
 #     }
 #
-#state <- ZEST.start(makeStim=makeStim, stopType="H", stopValue=  3, tt=20, fpr=0.03)
+#state <- ZEST.start(makeStim=makeStim, stopType="H", stopValue=  3, tt=0, fpr=0.30)
 #while(!ZEST.stop(state)) {
-#    r <- ZEST.step(state,   tt=20, fpr=0.03)
+#    r <- ZEST.step(state)
 #    cat(sprintf("%2d %s\n",tail(r$state$stimuli,1), r$resp$seen))
 #    state <- r$state
 #}

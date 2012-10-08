@@ -235,12 +235,55 @@ octo900.opiPresent.opiStaticStimulus <- function(stim, nextStim) {
 	))
 }
 
-########################################## TO DO
 
+###########################################################################
+# INPUT: 
+#   As per OPI spec
+#   stim$color must be same as that initialised by opiSetBackground or opiInitialize
+#
+# Return a list of 
+#	err  = string message
+#	seen = 1 if seen, 0 otherwise
+#	time = reaction time
+###########################################################################
 octo900.opiPresent.opiTemporalStimulus <- function(stim, nextStim=NULL, ...) {
-    stop("ERROR: haven't written octo900 temporal persenter yet")
-}
+    if (is.null(stim)) {
+        stimObj <- .jnull("opi/OpiTemporalStimulus")
+        nextObj <- .jnull("opi/OpiTemporalStimulus")
+    } else {
+        stimObj <- .jnew("opi/OpiTemporalStimulus", stim$x*10.0, stim$y*10.0, stim$rate*10.0)
+	    .jcall(stimObj, "V", "setSize", as.double(which.min(abs(GOLDMAN - stim$size))))
+	    .jcall(stimObj, "V", "setDuration", as.double(stim$duration))
+	    .jcall(stimObj, "V", "setResponseWindow", as.double(stim$responseWindow))
+        if (is.null(nextStim)) {
+            nextObj <- .jnull("opi/OpiTemporalStimulus")
+        } else {
+            nextObj <- .jnew("opi/OpiTemporalStimulus", nextStim$x*10.0, nextStim$y*10.0, 10.0) # rate no matter
+	        .jcall(nextObj, "V", "setSize", as.double(which.min(abs(GOLDMAN - nextStim$size))))
+	        .jcall(nextObj, "V", "setDuration", as.double(nextStim$duration))
+	        .jcall(nextObj, "V", "setResponseWindow", as.double(nextStim$responseWindow))
+        }
+    }
 
+    if(min(abs(GOLDMAN - stim$size)) != 0)
+        warning("opiPresent: Rounding stimulus size to nearest Goldmann size")
+
+    done <- FALSE
+    while (!done) {
+	done <- TRUE
+    	tryCatch(ret <- .jcall(opi.global.octopusObject, "Lopi/OpiPresentReturn;", "opiPresent", stimObj, nextObj), 
+	             java.util.ConcurrentModificationException = function(e) { done = FALSE })
+    }
+
+    return(list(
+	    err =.jcall(ret, "S", "getErr"), 
+	    seen=.jcall(ret, "I", "getSeen"), 
+	    time=.jcall(ret, "I", "getTime")
+	))
+
+}#opiPresent.opiTemporalStimulus()
+
+########################################## TO DO
 octo900.opiPresent.opiKineticStimulus <- function(stim, nextStim=NULL, ...) {
     stop("ERROR: haven't written octo900 kinetic persenter yet")
 }
