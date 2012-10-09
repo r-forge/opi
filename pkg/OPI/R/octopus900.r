@@ -138,7 +138,7 @@ setupBackgroundConstants <- function() {
 ###################################################################
 # Goldmann target sizes in degrees
 ###################################################################
-GOLDMAN <- c(6.5, 13, 26, 52, 104) / 60
+GOLDMANN <- c(6.5, 13, 26, 52, 104) / 60
 
 #######################################################################
 # INPUT: 
@@ -205,20 +205,20 @@ octo900.opiPresent.opiStaticStimulus <- function(stim, nextStim) {
         nextObj <- .jnull("opi/OpiStaticStimulus")
     } else {
         stimObj <- .jnew("opi/OpiStaticStimulus", stim$x*10.0, stim$y*10.0, cdTodb(stim$level)*10.0)
-	    .jcall(stimObj, "V", "setSize", as.double(which.min(abs(GOLDMAN - stim$size))))
+	    .jcall(stimObj, "V", "setSize", as.double(which.min(abs(GOLDMANN - stim$size))))
 	    .jcall(stimObj, "V", "setDuration", as.double(stim$duration))
 	    .jcall(stimObj, "V", "setResponseWindow", as.double(stim$responseWindow))
         if (is.null(nextStim)) {
             nextObj <- .jnull("opi/OpiStaticStimulus")
         } else {
             nextObj <- .jnew("opi/OpiStaticStimulus", nextStim$x*10.0, nextStim$y*10.0, 0) # level no matter
-	        .jcall(nextObj, "V", "setSize", as.double(which.min(abs(GOLDMAN - nextStim$size))))
+	        .jcall(nextObj, "V", "setSize", as.double(which.min(abs(GOLDMANN - nextStim$size))))
 	        .jcall(nextObj, "V", "setDuration", as.double(nextStim$duration))
 	        .jcall(nextObj, "V", "setResponseWindow", as.double(nextStim$responseWindow))
         }
     }
 
-    if(min(abs(GOLDMAN - stim$size)) != 0)
+    if(min(abs(GOLDMANN - stim$size)) != 0)
         warning("opiPresent: Rounding stimulus size to nearest Goldmann size")
 
     done <- FALSE
@@ -251,22 +251,19 @@ octo900.opiPresent.opiTemporalStimulus <- function(stim, nextStim=NULL, ...) {
         stimObj <- .jnull("opi/OpiTemporalStimulus")
         nextObj <- .jnull("opi/OpiTemporalStimulus")
     } else {
-        stimObj <- .jnew("opi/OpiTemporalStimulus", stim$x*10.0, stim$y*10.0, stim$rate*10.0)
-	    .jcall(stimObj, "V", "setSize", as.double(which.min(abs(GOLDMAN - stim$size))))
+        stimObj <- .jnew("opi/OpiTemporalStimulus", stim$x*10.0, stim$y*10.0, stim$rate)
+	    .jcall(stimObj, "V", "setSize", as.double(which.min(abs(GOLDMANN - stim$size))))
 	    .jcall(stimObj, "V", "setDuration", as.double(stim$duration))
 	    .jcall(stimObj, "V", "setResponseWindow", as.double(stim$responseWindow))
         if (is.null(nextStim)) {
             nextObj <- .jnull("opi/OpiTemporalStimulus")
         } else {
             nextObj <- .jnew("opi/OpiTemporalStimulus", nextStim$x*10.0, nextStim$y*10.0, 10.0) # rate no matter
-	        .jcall(nextObj, "V", "setSize", as.double(which.min(abs(GOLDMAN - nextStim$size))))
+	        .jcall(nextObj, "V", "setSize", as.double(which.min(abs(GOLDMANN - nextStim$size))))
 	        .jcall(nextObj, "V", "setDuration", as.double(nextStim$duration))
 	        .jcall(nextObj, "V", "setResponseWindow", as.double(nextStim$responseWindow))
         }
     }
-
-    if(min(abs(GOLDMAN - stim$size)) != 0)
-        warning("opiPresent: Rounding stimulus size to nearest Goldmann size")
 
     done <- FALSE
     while (!done) {
@@ -284,8 +281,49 @@ octo900.opiPresent.opiTemporalStimulus <- function(stim, nextStim=NULL, ...) {
 }#opiPresent.opiTemporalStimulus()
 
 ########################################## TO DO
-octo900.opiPresent.opiKineticStimulus <- function(stim, nextStim=NULL, ...) {
-    stop("ERROR: haven't written octo900 kinetic persenter yet")
+octo900.opiPresent.opiKineticStimulus <- function(stim, ...) {
+    if (is.null(stim)) {
+        stimObj <- .jnull("opi/OpiTemporalStimulus")
+    } else { 
+            # convert sizes to GOLDMANN
+        stim$sizes <- sapply(stim$sizes, function(s) {
+            i <- which.min(abs(GOLDMANN - s))
+            if(abs(GOLDMANN[i] - s) > 0.000001) {
+                warning("opiPresent: Rounding stimulus size to nearest Goldmann size")
+            } 
+            return(i)
+        })
+
+            # bit of a kludge as passing vector of one double seemed to barf
+        if (length(stim$path$x) == 2)
+            stimObj <- .jnew("opi/OpiKineticStimulus", 
+                sapply(stim$path$x, as.double), 
+                sapply(stim$path$y, as.double), 
+                as.double(cdTodb(stim$levels[1])),
+                as.double(stim$sizes[1]),
+                as.double(stim$speeds[1]))
+        else
+            stimObj <- .jnew("opi/OpiKineticStimulus", 
+                sapply(stim$path$x, as.double), 
+                sapply(stim$path$y, as.double), 
+                as.vector(sapply(sapply(stim$levels, cdTodb), as.double)),
+                as.vector(sapply(stim$sizes, as.double)), 
+                as.vector(sapply(stim$speeds, as.double)))
+    }
+
+    done <- FALSE
+    while (!done) {
+	done <- TRUE
+    	tryCatch(ret <- .jcall(opi.global.octopusObject, "Lopi/OpiPresentReturn;", "opiPresent", stimObj), 
+	             java.util.ConcurrentModificationException = function(e) { done = FALSE })
+    }
+
+    return(list(
+	    err =.jcall(ret, "S", "getErr"), 
+	    seen=.jcall(ret, "I", "getSeen"), 
+	    time=.jcall(ret, "I", "getTime")
+	))
+
 }
 
 ###########################################################################
