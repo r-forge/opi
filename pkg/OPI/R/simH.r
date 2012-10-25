@@ -31,7 +31,7 @@ assign("simH.global.type"   ,  NA  , envir = .GlobalEnv)
 # Input
 #   type N|G|C for the three Henson params
 #   cap  dB value for capping stdev form Henson formula
-#   display Dimensions of plot area to display stim. No display if NULL
+#   display Dimensions of plot area (-x,+x,-y,+y) to display stim. No display if NULL
 #
 # Return NULL if succesful, string error message otherwise  
 ################################################################################
@@ -89,7 +89,7 @@ simH.present <- function(db, cap=6, fpr=0.03, fnr=0.01, tt=30, A, B) {
 # stim is list of type opiStaticStimulus
 #
 simH.opiPresent.opiStaticStimulus <- function(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30) {
-    if (!exists(.GlobalEnv$simH.global.type)) {
+    if (!exists("simH.global.type", envir=.GlobalEnv)) {
         return ( list(
             err = "opiInitialize(type,cap) was not called before opiPresent()",
             seen= NA,

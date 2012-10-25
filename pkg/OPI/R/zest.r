@@ -123,9 +123,13 @@ ZEST.step <- function(state, nextStim=NULL) {
         stop(paste("ZEST.step: stimChoice = ",state$stimChoice," not implemented."))
     }
     stim <- state$domain[stimIndex]
-    opiResp <- do.call(opiPresent, c(list(stim=state$makeStim(stim, state$numPresentations), nextStim=nextStim), state$opiParams))
+    if (is.null(state$opiParams))
+        params <- list(stim=state$makeStim(stim, state$numPresentations), nextStim=nextStim)
+    else
+        params <- c(list(stim=state$makeStim(stim, state$numPresentations), nextStim=nextStim), state$opiParams)
+    opiResp <- do.call(opiPresent, params)
     while (!is.null(opiResp$err))
-        opiResp <- do.call(opiPresent, c(list(stim=state$makeStim(stim, state$numPresentations), nextStim=nextStim), state$opiParams))
+        opiResp <- do.call(opiPresent, params)
     state$stimuli          <- c(state$stimuli, stim)
     state$responses        <- c(state$responses, opiResp$seen)
     state$responseTimes    <- c(state$responseTimes, opiResp$time)

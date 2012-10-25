@@ -158,7 +158,7 @@ Andrew Turpin <aturpin@unimelb.edu.au>
 }
 \examples{
 chooseOpi("SimHenson")
-if (!is.null(opiInitialize("C", 6)))
+if (!is.null(opiInitialize(type="C", cap=6)))
     stop("opiInitialize failed")
 
     ##############################################

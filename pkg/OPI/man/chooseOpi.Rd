@@ -14,6 +14,8 @@ chooseOpi(opiImplementation)
 \arguments{
   \item{opiImplementation}{A character string that is one of the following.
     \itemize{
+    \item\code{"SimNo"} for a simulator that always doesn't see.
+    \item\code{"SimYes"} for a simulator that always does see.
     \item\code{"SimHenson"} for a simulator that uses a cummulative gaussian 
                 psychometric function with standard deviation 
                 according to Henson et al (2000) where variability 

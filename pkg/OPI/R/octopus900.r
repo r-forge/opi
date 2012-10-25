@@ -226,6 +226,14 @@ octo900.opiPresent.opiStaticStimulus <- function(stim, nextStim) {
 	done <- TRUE
     	tryCatch(ret <- .jcall(opi.global.octopusObject, "Lopi/OpiPresentReturn;", "opiPresent", stimObj, nextObj), 
 	             java.util.ConcurrentModificationException = function(e) { done = FALSE })
+#print(paste("Done = ",done))
+#if (is.null(ret))
+#    print(paste("ret = NULL"))
+#else {
+#	print(paste("err =",.jcall(ret, "S", "getErr")))
+#	print(paste("seen=",.jcall(ret, "I", "getSeen")))
+#	print(paste("time=",.jcall(ret, "I", "getTime")))
+#}
     }
 
     return(list(

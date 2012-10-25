@@ -27,10 +27,17 @@ opiDistributor <- function(method, ...) {
         warning(msg)
         return(msg)
     }
-    do.call(opi.implementations[[opi.global.chooser]][[method]], list(...))
+    toCall <- opi.implementations[[opi.global.chooser]][[method]]
+    allowedArgs <- names(formals(toCall))
+    haveArgs    <- names(list(...))
+#print(paste("Allowed args: ", allowedArgs))
+#print(paste("Have args: ", haveArgs))
+    argsToPass  <- intersect(allowedArgs, haveArgs)
+#print(paste("Passing args: ", argsToPass))
+    do.call(toCall, list(...)[argsToPass])
 }
 
-opiPresent        <- function(stim,nextStim=NULL,...) { opiDistributor("opiPresent", stim, nextStim, ...) }
+opiPresent        <- function(stim,nextStim=NULL,...) { opiDistributor("opiPresent", stim=stim, nextStim=nextStim, ...) }
 
 opiInitialize     <- function(...) { opiDistributor("opiInitialize", ...) }
 

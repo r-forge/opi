@@ -44,6 +44,22 @@ opi.implementations <- list(
         opiPresent       = "octo900.opiPresent"
     ),
     list(
+        name="SimNo",
+        opiInitialize    = "simNo.opiInitialize",
+        opiClose         = "simNo.opiClose",
+        opiSetBackground = "simNo.opiSetBackground",
+        opiQueryDevice   = "simNo.opiQueryDevice",
+        opiPresent       = "simNo.opiPresent"
+    ),
+    list(
+        name="SimYes",
+        opiInitialize    = "simYes.opiInitialize",
+        opiClose         = "simYes.opiClose",
+        opiSetBackground = "simYes.opiSetBackground",
+        opiQueryDevice   = "simYes.opiQueryDevice",
+        opiPresent       = "simYes.opiPresent"
+    ),
+    list(
         name="SimHenson",
         opiInitialize    = "simH.opiInitialize",
         opiClose         = "simH.opiClose",

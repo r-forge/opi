@@ -26,3 +26,8 @@ OPI 1.2.2
 
 OPI 1.3
   - Contains Temporal and Kinetic in OPIPresent
+
+OPI 1.4
+  - allows for differring params to all opiXX() functions (in opiDistributor)
+    but as a result, all params MUST be named in calls
+  - added simYes and simNo

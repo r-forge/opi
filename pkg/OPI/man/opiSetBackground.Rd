@@ -87,12 +87,12 @@ Andrew Tuprin <aturpin@unimelb.edu.au>
 chooseOpi("SimGaussian")
 if (!is.null(opiInitialize(sd=2, display=c(-30,30,-30,30))))
     stop("opiInitialize failed")
-if (!is.null(opiSetBackground("white","grey")))
+if (!is.null(opiSetBackground(col="white",gridCol="grey")))
     stop("opiSetBackground failed, which is very surprising!")
 
 \dontrun{
 chooseOpi("Octopus900")
-if (!is.null(opiInitialize("c:/EyeSuite/","c:/Documents and Settings/All Users/Haag-Streit/","left"))
+if (!is.null(opiInitialize( eyeSuiteJarLocation="c:/EyeSuite/",eyeSuiteSettingsLocation="c:/Documents and Settings/All Users/Haag-Streit/",eye="left"))
     stop("opiInitialize failed")
 if (!is.null(opiSetBackground(fixation=opi.O900.FIX_CENTRE)))
     stop("opiSetBackground failed")

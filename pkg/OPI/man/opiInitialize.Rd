@@ -114,9 +114,9 @@ if (!is.null(opiInitialize(sd=2)))
     # Set up the Octopus 900
 chooseOpi("Octopus900")
 if (!is.null(opiInitialize(
-        "C:/EyeSuite/", 
-        "C:/Documents and Settings/All Users/HAAG-STREIT/EyeSuite/",
-        "left")))
+        eyeSuiteJarLocation="C:/EyeSuite/", 
+        eyeSuiteSettingsLocation="C:/Documents and Settings/All Users/HAAG-STREIT/EyeSuite/",
+        eye="left")))
     stop("opiInitialize failed")
 }
 }

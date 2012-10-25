@@ -80,24 +80,23 @@ simDisplay.setBackground <- function(col, gridCol) {
 
 ##################################################################################
 # Show stim on plot for duration and wait responseWindow after.
-# No return, just die quitely if neccessary.
+# No return, just die quietly if neccessary.
 ##################################################################################
 simDisplay.present <- function(x, y, color, duration, responseWindow) {
-    if(!exists("simDisplay.global.display"))
-        return
-
-    if (!is.na(simDisplay.global.display)) {
-        if (dev.cur() != simDisplay.global.display) {  # check if window was closed
-            assign("simDisplay.global.display", NA, envir = .GlobalEnv)
-        } else {
-            startTime <- Sys.time()
-            points(x, y, pch=19, col=color)
-            dt <- difftime(Sys.time(), startTime, units="secs")*1000
-            while (dt < duration)
+    if(exists("simDisplay.global.display")) {
+        if (!is.na(simDisplay.global.display)) {
+            if (dev.cur() != simDisplay.global.display) {  # check if window was closed
+                assign("simDisplay.global.display", NA, envir = .GlobalEnv)
+            } else {
+                startTime <- Sys.time()
+                points(x, y, pch=19, col=color)
                 dt <- difftime(Sys.time(), startTime, units="secs")*1000
-            points(x, y, pch=19, col=simDisplay.global.bg)  # blank it
-            while (dt < duration + responseWindow)
-                dt <- difftime(Sys.time(), startTime, units="secs")*1000
+                while (dt < duration)
+                    dt <- difftime(Sys.time(), startTime, units="secs")*1000
+                points(x, y, pch=19, col=simDisplay.global.bg)  # blank it
+                while (dt < duration + responseWindow)
+                    dt <- difftime(Sys.time(), startTime, units="secs")*1000
+            }
         }
     }
 }

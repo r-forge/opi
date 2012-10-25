@@ -43,6 +43,10 @@ There is no guarantee that the next call to
 \code{opiPresent} will have \code{nextStim} as the first argument; this 
 should be checked by the machine specific implementations.
 
+Also note that to allow for different parameters depending on the 
+implementation chosen with \code{chooseOpi}, every parameter MUST
+be named in a call to \code{opiPresent}.
+
 \subsection{SimHenson}{
 
 \code{opiPresent(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30)}
@@ -122,10 +126,13 @@ makeStim <- function(db, n) {
     return(s)
 }
 chooseOpi("SimHenson")
-if (!is.null(opiInitialize("C", 6)))
+if (!is.null(opiInitialize(type="C", cap=6)))
     stop("opiInitialize failed")
 
 result <- opiPresent(stim=makeStim(10,0), tt=30, fpr=0.15, fnr=0.01)
+
+    # Will not work as 'stim' is not named
+#result <- opiPresent(makeStim(10,0), tt=30, fpr=0.15, fnr=0.01)
 
 if (!is.null(opiClose()))
     warning("opiClose() failed")
