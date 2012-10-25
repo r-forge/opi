@@ -26,9 +26,9 @@ The OPI package will be in CRAN soon, I hope. In the meantime you have to instal
 Inside R type the following.
 
 \begin{verbatim}
-> install.packages("c:\\OPI_v1.1.tar.gz", NULL, type="source")
+> install.packages("c:\\OPI_v1.4.tar.gz", NULL, type="source")
 
-> install.packages("c:\\OPIOctopus900_v1.0.tar.gz", NULL, type="source")
+> install.packages("c:\\OPIOctopus900_v1.1.tar.gz", NULL, type="source")
 \end{verbatim}
 
 Make sure the first argument to each call to the {\tt install.packages}
@@ -64,12 +64,13 @@ calling {\tt chooseOPI} with an argument of {\tt NULL}.
 
 \begin{verbatim}
 > chooseOpi(NULL)
-        name         name           name    name 
-"Octopus900"   "SimHenson" "SimGaussian"   "HEP"
+        name          name          name          name          name 
+ "Octopus900"       "SimNo"      "SimYes"   "SimHenson" "SimGaussian" 
+
 [1] TRUE
 \end{verbatim}
 
-This shows us that there are three implementations available. Letâ us choose
+This shows us that there are three implementations available. Let us choose
 the Octopus900 one.
 
 \begin{verbatim}
@@ -92,11 +93,13 @@ then the function name. For example:
 > ?opiInitialize
 \end{verbatim}
 
+Note that all arguments to opi functions must be named.
+
 For the Octopus 900, two folder names and the eye to be tested is required.
 \begin{verbatim}
-> opiInitialize("c:\Program Files\EyeSuite\",
-+ "c:\Documents and Settings\All Users\HAAG STREIT\EyeSuite\",
-+ "right")
+> opiInitialize(eyeSuiteJarLocation="c:\Program Files\EyeSuite\",
++ eyeSuiteSettingsLocation="c:\Documents and Settings\All Users\HAAG STREIT\EyeSuite\",
++ eye="right")
 NULL
 \end{verbatim}
 The first folder is the location of the EyeSuite software. The folder should contain files
@@ -147,7 +150,7 @@ location (9,9) for that dB value.
 
 Now that you have a stimulus, you can present it with {\tt opiPresent} as follows.
 \begin{verbatim}
-> opiPresent(makeStim(0), makeStim(0))
+> opiPresent(stim=makeStim(0), nextStim=makeStim(0))
 \end{verbatim}            
 This will only work if you have successfully run {\tt opiInitialize}.
 Note that {\tt opiPresent} takes two stimulus arguments: the first is the one to present, and
