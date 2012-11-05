@@ -14,7 +14,7 @@ An implementation of the Bayesian test procedure of King-Smith et al.
 }
 \usage{
 ZEST(domain=0:40, prior=rep(1/length(domain),length(domain)), 
-     likelihood=sapply(0:40, function(tt) { 0.03 + (1-0.03-0.03)*(1-pnorm(0:40, tt, 1)) }),
+     likelihood=sapply(domain, function(tt) { 0.03 + (1-0.03-0.03)*(1-pnorm(domain, tt, 1)) }),
      stopType="S", stopValue=1.5,
      maxSeenLimit=2, minNotSeenLimit=2,
      maxPresentations=100,
@@ -24,7 +24,7 @@ ZEST(domain=0:40, prior=rep(1/length(domain),length(domain)),
      ...) 
 
 ZEST.start(domain=0:40, prior=rep(1/length(domain),length(domain)), 
-     likelihood=sapply(0:40, function(tt) { 0.03 + (1-0.03-0.03)*(1-pnorm(0:40, tt, 1)) }),
+     likelihood=sapply(domain, function(tt) { 0.03 + (1-0.03-0.03)*(1-pnorm(domain, tt, 1)) }),
      stopType="S", stopValue=1.5,
      maxSeenLimit=2, minNotSeenLimit=2,
      maxPresentations=100,
@@ -142,6 +142,11 @@ A.B. Watson and D.G. Pelli.
 "QUEST: A Bayesian adaptive psychophysical method", 
 Perception and Psychophysics 33 1983. 
 Pages 113-l20.
+
+Please cite:
+A. Turpin, P.H. Artes and A.M. McKendrick
+"The Open Perimetry Interface: An enabling tool for clinical visual psychophysics",
+Journal of Vision 12(11) 2012.
 
 http://perimetry.org/OPI
 }

@@ -73,6 +73,11 @@ to change the background and stimulus colors.
 
 }
 \references{
+Please cite:
+A. Turpin, P.H. Artes and A.M. McKendrick
+"The Open Perimetry Interface: An enabling tool for clinical visual psychophysics",
+Journal of Vision 12(11) 2012.
+
 http://perimetry.org/OPI
 
 David B. Henson, Shaila Chaudry, Paul H. Artes, E. Brian Faragher, and

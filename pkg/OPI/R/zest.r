@@ -55,7 +55,7 @@ ZEST.entropy <- function(state) {
 #   ...           Parameters for opiPresent
 ##############################################
 ZEST.start <- function(domain=0:40, prior=rep(1/length(domain),length(domain)), 
-            likelihood=sapply(0:40, function(tt) { 0.03 + (1-0.03-0.03)*(1-pnorm(0:40, tt, 1)) }),
+            likelihood=sapply(domain, function(tt) { 0.03 + (1-0.03-0.03)*(1-pnorm(domain, tt, 1)) }),
             stopType="S",
             stopValue=1.5,
             maxSeenLimit=2,
@@ -218,7 +218,7 @@ ZEST.final <- function(state) {
 #   2) opiPresent called infinitely until no error
 ################################################################################
 ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)), 
-            likelihood=sapply(0:40, function(tt) { 0.03 + (1-0.03-0.03)*(1-pnorm(0:40, tt, 1)) }),
+            likelihood=sapply(domain, function(tt) { 0.03 + (1-0.03-0.03)*(1-pnorm(domain, tt, 1)) }),
             stopType="S",
             stopValue=1.5,
             maxSeenLimit=2,

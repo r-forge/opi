@@ -39,6 +39,11 @@ Response Variability in the Visual Field: Comparison of Optic Neuritis,
 Glaucoma, Ocular Hypertension, and Normal Eyes.
 Investigative Ophthalmology & Visual Science, February 2000, Vol. 41(2).
 
+Please cite:
+A. Turpin, P.H. Artes and A.M. McKendrick
+"The Open Perimetry Interface: An enabling tool for clinical visual psychophysics",
+Journal of Vision 12(11) 2012.
+
 http://perimetry.org/OPI
 
 }
