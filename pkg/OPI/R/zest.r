@@ -45,8 +45,10 @@ ZEST.entropy <- function(state) {
 #                 where s and t are indexs into domain
 #   stopType      N | S | H
 #   stopValue     Value for num prs (N), stdev (S) of Entropy (H)
-#   minNotSeenLimit Will terminate if lowest domain value not seen this many times
-#   maxSeenLimit    Will terminate if highest domain value seen this many times
+#   minStimulus   Lowest value to present
+#   maxStimulus   Highest value to present
+#   minNotSeenLimit Will terminate if minLimit value not seen this many times
+#   maxSeenLimit    Will terminate if maxLimit value seen this many times
 #   maxPresentations Maximum number of presentations
 #   verbose       1 if you want pdfs returned, 2 is 1+print, 0 for none
 #   makeStim      A helper function to create the required
@@ -58,6 +60,8 @@ ZEST.start <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
             likelihood=sapply(domain, function(tt) { 0.03 + (1-0.03-0.03)*(1-pnorm(domain, tt, 1)) }),
             stopType="S",
             stopValue=1.5,
+            minStimulus=head(domain, 1),
+            maxStimulus=tail(domain, 1),
             maxSeenLimit=2,
             minNotSeenLimit=2,
             maxPresentations=100,
@@ -82,13 +86,15 @@ ZEST.start <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
                 likelihood=likelihood, 
                 stopType=stopType,
                 stopValue=stopValue,
+                minStimulus=minStimulus,
+                maxStimulus=maxStimulus,
                 maxSeenLimit=maxSeenLimit,
                 minNotSeenLimit=minNotSeenLimit,
                 maxPresentations=maxPresentations,
                 makeStim=makeStim,
                 stimChoice=stimChoice,
-                currSeenLimit=0,                    # number of times tail(domain) seen
-                currNotSeenLimit=0,                 # number of times head(domain) not seen
+                currSeenLimit=0,                    # number of times maxStimulus seen
+                currNotSeenLimit=0,                 # number of times minStimulus not seen
                 numPresentations=0,                 # number of presentations so far
                 stimuli=NULL,                       # vector of stims shown
                 responses=NULL,                     # vector of responses (1 seen, 0 not)
@@ -123,6 +129,9 @@ ZEST.step <- function(state, nextStim=NULL) {
         stop(paste("ZEST.step: stimChoice = ",state$stimChoice," not implemented."))
     }
     stim <- state$domain[stimIndex]
+    stim <- max(stim, state$minStimulus)   # check not outside [minStimulus,maxStimulus]
+    stim <- min(stim, state$maxStimulus)
+
     if (is.null(state$opiParams))
         params <- list(stim=state$makeStim(stim, state$numPresentations), nextStim=nextStim)
     else
@@ -136,10 +145,10 @@ ZEST.step <- function(state, nextStim=NULL) {
     state$numPresentations <- state$numPresentations + 1
     
     if(opiResp$seen) { 
-        if (stimIndex == length(state$domain)) state$currSeenLimit <- state$currSeenLimit + 1
+        if (state$domain[stimIndex] == state$maxStimulus) state$currSeenLimit <- state$currSeenLimit + 1
         state$pdf <- state$pdf * state$likelihood[stimIndex, ]
     } else {
-        if (stimIndex == 1) state$currNotSeenLimit <- state$currNotSeenLimit + 1
+        if (state$domain[stimIndex] == state$minStimulus) state$currNotSeenLimit <- state$currNotSeenLimit + 1
         state$pdf <- state$pdf * (1 - state$likelihood[stimIndex, ])
     }
     state$pdf <- state$pdf/sum(state$pdf)
@@ -221,6 +230,8 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
             likelihood=sapply(domain, function(tt) { 0.03 + (1-0.03-0.03)*(1-pnorm(domain, tt, 1)) }),
             stopType="S",
             stopValue=1.5,
+            minStimulus=head(domain,1),
+            maxStimulus=tail(domain,1),
             maxSeenLimit=2,
             minNotSeenLimit=2,
             maxPresentations=100,
@@ -228,6 +239,7 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
             stimChoice="mean",
             ...) {
     state <- ZEST.start(domain, prior, likelihood, stopType, stopValue, 
+                        minStimulus, maxStimulus, 
                         maxSeenLimit,minNotSeenLimit,maxPresentations,
                         makeStim,stimChoice, ...)
 
@@ -262,6 +274,7 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
 ############################################################
 #require(OPI)
 #chooseOpi("SimHenson")
+##chooseOpi("SimYes")
 #opiInitialize("C",6)
 #
 #makeStim <- function(db, n) { 
@@ -279,14 +292,14 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
 #         return(s)
 #     }
 #
-#state <- ZEST.start(makeStim=makeStim, stopType="H", stopValue=  3, tt=0, fpr=0.30)
+#state <- ZEST.start(domain=-5:45, maxStimulus=40, minStimulus=0, makeStim=makeStim, stopType="S", stopValue= 1.5, tt=0, fpr=0.30)
 #while(!ZEST.stop(state)) {
 #    r <- ZEST.step(state)
 #    cat(sprintf("%2d %s\n",tail(r$state$stimuli,1), r$resp$seen))
 #    state <- r$state
 #}
 #print(ZEST.final(state))
-
+#
 #print("########################################################################")
 #
 #makeStimHelper <- function(db,n, x, y) {
@@ -307,15 +320,16 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
 #
 #    # setup starting states for each location
 #states <- lapply(locations, function(loc) {
-#    ZEST.start(
+#    ZEST.start(domain=-5:45,
 #        makeStim=makeStimHelper(db,n,loc[1],loc[2]),
+#        maxStimulus=40, minStimulus=0,         
 #        stopType="S", stopValue= 1.5, tt=loc[3], fpr=0.03, fn=0.01)
 #})
 #
 #opi.procedure.save(states, "Zest_states.opi")
-
+#
 #states <- opi.procedure.load("Zest_states.opi")
-
+#
 #    # loop through until all states are "stop"
 #while(!all(st <- unlist(lapply(states, ZEST.stop)))) {
 #    i <- sample(which(!st), 1)  # choose a random, unstopped state
@@ -328,21 +342,21 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
 #    cat(sprintf("Location (%+2d,%+2d) has threshold %4.2f\n",locations[[i]][1], locations[[i]][2], finals[[i]]))
 #    
 #print("########################################################################")
-
+#
 #a <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stopType="H", stopValue=  3, verbose=0, tt=20, fpr=0.03))
 #b <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stopType="S", stopValue=1.5, verbose=0, tt=20, fpr=0.03))
 #c <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stopType="S", stopValue=2.0, verbose=0, tt=20, fpr=0.03))
 #d <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stopType="N", stopValue= 50, verbose=0, tt=20, fpr=0.03))
-
+#
 #a <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stimChoice="mean", tt=20, fpr=0.03))
 #b <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stimChoice="mode", tt=20, fpr=0.03))
 #c <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stimChoice="median", tt=20, fpr=0.03))
 #d <- sapply(1:100, function(i) ZEST(makeStim=makeStim, stimChoice="mean", tt=20, fpr=0.03))
-
+#
 #layout(matrix(1:2,1,2))
 #boxplot(lapply(list(a,b,c,d), function(x) unlist(x["final",])))
 #boxplot(lapply(list(a,b,c,d), function(x) unlist(x["npres",])))
-
+#
 #a <- sapply(1:100, function(i) ZEST(makeStim=makeStim, prior=dnorm(0:40,m=0,s=5), tt=30, fpr=0.03))
 #b <- sapply(1:100, function(i) ZEST(makeStim=makeStim, prior=dnorm(0:40,m=10,s=5), tt=30, fpr=0.03))
 #c <- sapply(1:100, function(i) ZEST(makeStim=makeStim, prior=dnorm(0:40,m=20,s=5), tt=30, fpr=0.03))
@@ -350,7 +364,7 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
 #layout(matrix(1:2,1,2))
 #boxplot(lapply(list(a,b,c,d), function(x) unlist(x["final",])))
 #boxplot(lapply(list(a,b,c,d), function(x) unlist(x["npres",])))
-
+#
 #repp <- function(...) sapply(1:100, function(i) ZEST(makeStim=makeStim, ...))
 #a <- repp(stopType="H", stopValue=  3, verbose=0, tt=30, fpr=0.03)
 #b <- repp(stopType="S", stopValue=1.5, verbose=0, tt=30, fpr=0.03)
@@ -364,7 +378,7 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
 #layout(matrix(1:2,1,2))
 #boxplot(lapply(list(a,b,c,d,e,f,g,h), function(x) unlist(x["final",])))
 #boxplot(lapply(list(a,b,c,d,e,f,g,h), function(x) unlist(x["npres",])))
-
+#
 #a <- sapply(1:100, function(i) ZEST(makeStim=makeStim, prior=dnorm(0:40,m=30,s=5), tt=00, fpr=0.03))
 #b <- sapply(1:100, function(i) ZEST(makeStim=makeStim, prior=dnorm(0:40,m=30,s=5), tt=10, fpr=0.03))
 #c <- sapply(1:100, function(i) ZEST(makeStim=makeStim, prior=dnorm(0:40,m=30,s=5), tt=20, fpr=0.03))
@@ -372,5 +386,5 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
 #layout(matrix(1:2,1,2))
 #boxplot(lapply(list(a,b,c,d), function(x) unlist(x["final",])))
 #boxplot(lapply(list(a,b,c,d), function(x) unlist(x["npres",])))
-
-
+#
+#

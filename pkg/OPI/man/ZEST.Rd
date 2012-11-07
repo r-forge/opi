@@ -16,6 +16,8 @@ An implementation of the Bayesian test procedure of King-Smith et al.
 ZEST(domain=0:40, prior=rep(1/length(domain),length(domain)), 
      likelihood=sapply(domain, function(tt) { 0.03 + (1-0.03-0.03)*(1-pnorm(domain, tt, 1)) }),
      stopType="S", stopValue=1.5,
+     minStimulus=head(domain,1), 
+     maxStimulus=tail(domain,1),
      maxSeenLimit=2, minNotSeenLimit=2,
      maxPresentations=100,
      verbose=0, 
@@ -26,6 +28,8 @@ ZEST(domain=0:40, prior=rep(1/length(domain),length(domain)),
 ZEST.start(domain=0:40, prior=rep(1/length(domain),length(domain)), 
      likelihood=sapply(domain, function(tt) { 0.03 + (1-0.03-0.03)*(1-pnorm(domain, tt, 1)) }),
      stopType="S", stopValue=1.5,
+     minStimulus=head(domain,1), 
+     maxStimulus=tail(domain,1),
      maxSeenLimit=2, minNotSeenLimit=2,
      maxPresentations=100,
      makeStim, 
@@ -52,9 +56,11 @@ Starting probability distribution over domain.
 \item{stopValue}{Value for number of presentations (\code{stopType=N}), standard deviation (\code{stopType=S)} or
 Entropy (\code{stopType=H}).
 }
-\item{minNotSeenLimit}{ Will terminate if lowest domain value is not seen this many times.
+\item{minStimulus}{ The smallest stimuli that will be presented. Could be different from \code{domain[1]}.}
+\item{maxStimulus}{ The largest stimuli that will be presented. Could be different from \code{tail(domain,1)}.}
+\item{minNotSeenLimit}{ Will terminate if \code{minStimulus} value is not seen this many times.
 }
-\item{maxSeenLimit}{    Will terminate if highest domain value is seen this many times.
+\item{maxSeenLimit}{    Will terminate if \code{maxStimulus} value is seen this many times.
 }
 \item{maxPresentations}{ Maximum number of presentations regarless of \code{stopType}.
 }
@@ -215,6 +221,9 @@ locations <- list(c(9,9,30), c(-9,-9,32), c(9,-9,31), c(-9,9,33))
     # Setup starting states for each location
 states <- lapply(locations, function(loc) {
     ZEST.start(
+        domain=-5:45,
+        minStimulus=0,
+        maxStimulus=40,
         makeStim=makeStimHelper(db,n,loc[1],loc[2]),
         stopType="S", stopValue= 1.5, tt=loc[3], fpr=0.03, fn=0.01)
 })
