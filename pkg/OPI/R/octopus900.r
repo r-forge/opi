@@ -239,7 +239,8 @@ octo900.opiPresent.opiStaticStimulus <- function(stim, nextStim) {
     return(list(
 	    err =.jcall(ret, "S", "getErr"), 
 	    seen=.jcall(ret, "I", "getSeen"), 
-	    time=.jcall(ret, "I", "getTime")
+	    time=.jcall(ret, "I", "getTime"),
+	    frame=.jcall(ret, "[B", "getFrame")
 	))
 }
 

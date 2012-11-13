@@ -26,9 +26,9 @@ The OPI package will be in CRAN soon, I hope. In the meantime you have to instal
 Inside R type the following.
 
 \begin{verbatim}
-> install.packages("c:\\OPI_v1.4.tar.gz", NULL, type="source")
+> install.packages("c:\\OPI_v1.4.tar.gz", lib=.Library, repos=NULL, type="source")
 
-> install.packages("c:\\OPIOctopus900_v1.1.tar.gz", NULL, type="source")
+> install.packages("c:\\OPIOctopus900_v1.1.tar.gz", lib=.Library, repos=NULL, type="source")
 \end{verbatim}
 
 Make sure the first argument to each call to the {\tt install.packages}
