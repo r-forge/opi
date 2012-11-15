@@ -71,11 +71,29 @@ determined by \code{simH.type} which is also set in the call to
 \code{opiPresent(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30)}
 
 If the chosen OPI implementation is \code{SimGaussian}, then
-the response to a stimuli as determined by sampling from a
+the response to a stimuli is determined by sampling from a
 Frequency-of-Seeing (FoS) curve (also known as the psychometric
 function) with formula \code{fpr+(1-fpr-fnr)*(1-pnorm(x, tt, simG.global.sd))},
 where \code{x} is the stimulus value in Humphrey dB, and \code{simG.global.sd} is
 set with \code{opiInitialize}.
+}
+
+\subsection{SimYes}{
+
+\code{opiPresent(stim, nextStim=NULL)}
+
+If the chosen OPI implementation is \code{SimYes}, then
+the response to a stimuli is always yes, hence \code{opiPresent} always returns 
+\code{err=NULL}, \code{seen=TRUE}, and \code{time=0}.
+}
+
+\subsection{SimNo}{
+
+\code{opiPresent(stim, nextStim=NULL)}
+
+If the chosen OPI implementation is \code{SimNo}, then
+the response to a stimuli is always no, hence \code{opiPresent} always returns 
+\code{err=NULL}, \code{seen=FALSE}, and \code{time=0}.
 }
 
 }
@@ -95,6 +113,10 @@ until the response from the subject if \code{seen} is \code{TRUE}.
 If \code{seen} is \code{FALSE}, this
 value is undefined.
 }
+\item{frame}{Only returned for Octopus 900. A byte array of pixels for an image that is 320 wide. The
+image is the OPI's best guess at when the stimuli was presented. It is taken from the video stream at
+the time that the "present stimuli" message is sent to the Octopus 900. There is no gaurantee that
+this will be the actual stimulus presentation time.}
 }
 \references{
 Please cite:

@@ -153,7 +153,8 @@ GOLDMANN <- c(6.5, 13, 26, 52, 104) / 60
 # @return 2 if failed to make ready
 #
 #######################################################################
-octo900.opiInitialize <- function(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocation=NA, eye=NA) {
+octo900.opiInitialize <- function(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocation=NA, eye=NA,
+                            gazeFeed=TRUE) {
     if (is.na(eyeSuiteJarLocation))
         stop("You must specify the EyeSuite jar file folder in your call to opiInitialize")
     if (is.na(eyeSuiteSettingsLocation))
@@ -179,7 +180,12 @@ octo900.opiInitialize <- function(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocati
         # the controling object
     assign("opi.global.octopusObject", .jnew("opi.Opi", eyeSuiteSettingsLocation, eye), envir = .GlobalEnv)
 
-	err <- .jcall(.GlobalEnv$opi.global.octopusObject, "I", "opiInitialize")
+    if (gazeFeed) {
+        gaze <- 1
+    } else {
+        gaze <- 0
+    }
+	err <- .jcall(.GlobalEnv$opi.global.octopusObject, "I", "opiInitialize", gaze)
 	if (err == 0)
 		return(NULL)
 	else

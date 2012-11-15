@@ -19,6 +19,7 @@ export(opiPresent)
 export(opiSetBackground)
 export(opiQueryDevice)
 export(opiInitialize)
+export(opiInitialise)
 export(opiClose)
 
 S3method(simH.opiPresent, opiStaticStimulus)

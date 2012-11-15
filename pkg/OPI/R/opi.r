@@ -40,6 +40,7 @@ opiDistributor <- function(method, ...) {
 opiPresent        <- function(stim,nextStim=NULL,...) { opiDistributor("opiPresent", stim=stim, nextStim=nextStim, ...) }
 
 opiInitialize     <- function(...) { opiDistributor("opiInitialize", ...) }
+opiInitialise     <- function(...) { opiDistributor("opiInitialize", ...) }
 
 opiSetBackground  <- function(...) { opiDistributor("opiSetBackground", ...) }
 

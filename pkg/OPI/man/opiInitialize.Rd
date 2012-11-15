@@ -1,5 +1,6 @@
 \name{opiInitialize}
 \alias{opiInitialize}
+\alias{opiInitialise}
 \title{
 Initialize OPI.
 }
@@ -9,6 +10,7 @@ Generic function for initialization of the chosen OPI implementation that is set
 }
 \usage{
 opiInitialize(...)
+opiInitialise(...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -44,18 +46,23 @@ opiInitialize(...)
     \code{display} is as for SimHenson.
 }
 \subsection{Octopus900}{
-    \code{opiInitialize(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocation=NA, eye=NA)}
+    \code{opiInitialize(eyeSuiteJarLocation, eyeSuiteSettingsLocation, eye, gazeFeed=TRUE)}
 
     If the chosen OPI implementation is \code{Octopus900}, then you must 
     specify two directory/folder names and the eye to be tested.
 
     \code{eyeSuiteJarLocation} is the folder name containing the EyeSuite jar files,
-    and should include the trainling slash.
+    and should include the trailing slash.
 
     \code{eyeSuiteSettingsLocation} is the folder name containing the EyeSuite setting files,
-    and should include the trainling slash.
+    and should include the trailing slash.
 
     \code{eye} must be either "left" or "right".
+
+    \code{gazeFeed} is a flag to turn on gaze video data in the OPI. If \code{TRUE}, then 
+    a Java driven window appears containing the live feed from the Octopus 900 gaze camera,
+    and \code{opiPresent} returns an image that it estimates to be the video frame
+    when the stimulus is presented.
 }
 }
 

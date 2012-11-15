@@ -34,3 +34,6 @@ OPI 1.4
   - fixed "domain" bug in ZEST.start likelihood parameter
   - added minStimulus and maxStimulus to ZEST.start and internals of ZEST.step
   - added frame to opiPresent return
+  - added param to opiInitialize to turn gaze tracking on/off
+  - added alias opiInitialise
+  - updated docs.
