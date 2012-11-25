@@ -11,6 +11,8 @@ ZEST
 }
 \description{
 An implementation of the Bayesian test procedure of King-Smith et al.
+Note that we use the term \code{pdf} throughout as in the original paper, even though
+they are discrete probability functions in this implementation.
 }
 \usage{
 ZEST(domain=0:40, prior=rep(1/length(domain),length(domain)), 
@@ -42,13 +44,13 @@ ZEST.final(state)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{domain}{
-List of values over which pdf is kept.
+Vector of values over which pdf is kept.
 }
   \item{prior}{
-Starting probability distribution over domain.
+Starting probability distribution over domain. Same length as \code{domain}.
 }
 \item{likelihood}{Matrix where \code{likelihood[s,t]} is likelihood of seeing \code{s} given \code{t} 
-                  is the true threshold. That is, Pr(s|t) where \code{s} and \code{t} are indexs into domain.
+                  is the true threshold. That is, Pr(s|t) where \code{s} and \code{t} are indexes into \code{domain}.
 }
 \item{stopType}{ \code{N}, for number of presentations; \code{S}, for standard deviation of the pdf; and
 \code{H}, for the entropy  of the pdf.
@@ -107,11 +109,11 @@ Extra parameters to pass to the opiPresent function
 
 \code{ZEST} returns a list containing
 \itemize{
-\item{npres}{Total number of presentations used.}
-\item{respSeq}{Response sequence stored as a list of (stimulus, seen) pairs.}
-\item{pdfs}{If \code{verbose} is bigger than 0, then this is a list of the pdfs used for each presentation,
+\item{npres:}{ Total number of presentations used.}
+\item{respSeq:}{ Response sequence stored as a list of (stimulus, seen) pairs.}
+\item{pdfs:}{ If \code{verbose} is bigger than 0, then this is a list of the pdfs used for each presentation,
 otherwise NULL.}
-\item{final}{The mean/median/mode of the final pdf, depending on \code{stimChoice}, which is the determined threshold.}
+\item{final}{ The mean/median/mode of the final pdf, depending on \code{stimChoice}, which is the determined threshold.}
 }
 }
 
@@ -120,12 +122,36 @@ otherwise NULL.}
 \code{ZEST.start} returns a list that can be passed to 
 \code{ZEST.step},
 \code{ZEST.stop} and
-\code{ZEST.final}.
+\code{ZEST.final}. It represents the state of a ZEST at a single location at a point in time and 
+contains the following.
+\itemize{
+    \item{name:}{ \code{ZEST}}
+    \item{}{ A copy of all of the parameters supplied to ZEST.start: 
+    \code{domain}
+    \code{likelihood},
+    \code{stopType},
+    \code{stopValue},
+    \code{minStimulus},
+    \code{maxStimulus},
+    \code{maxSeenLimit},
+    \code{minNotSeenLimit},
+    \code{maxPresentations},
+    \code{makeStim},
+    \code{stimChoice},
+    \code{currSeenLimit},
+    \code{currNotSeenLimit}, and
+    \code{opiParams}.}
+    \item{pdf:}{ Current pdf: vector of probabilities the same length as \code{domain}.}
+    \item{numPresentations:}{ The number of times \code{ZEST.step} has been called on this state.}
+    \item{stimuli:}{ A vector containing the stimuli used at each call of \code{ZEST.step}.}
+    \item{responses:}{ A vector containing the responses received at each call of \code{ZEST.step}.}
+    \item{responseTimes:}{ A vector containing the response times received at each call of \code{ZEST.step}.}
+}
 
 \code{ZEST.step} returns a list containing
 \itemize{
-\item{state}{The new state after presenting a stimuli and getting a response.}
-\item{resp}{The return from the \code{opiPresent} call that was made.}
+\item{state:}{ The new state after presenting a stimuli and getting a response.}
+\item{resp:}{ The return from the \code{opiPresent} call that was made.}
 }
 
 
@@ -163,9 +189,7 @@ Andrew Turpin <aturpin@unimelb.edu.au>
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{dbTocd}}, \code{\link{opiPresent}}, 
-\code{\link{opi.procedure.save}},
-\code{\link{opi.procedure.load}}
+\code{\link{dbTocd}}, \code{\link{opiPresent}}
 }
 \examples{
 chooseOpi("SimHenson")

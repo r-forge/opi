@@ -24,8 +24,7 @@
 simH.opiClose         <- function() { return(NULL) }
 simH.opiQueryDevice   <- function() { return (list(type="SimHenson")) }
 
-assign("simH.global.cap"    ,  NA  , envir = .GlobalEnv)
-assign("simH.global.type"   ,  NA  , envir = .GlobalEnv)
+.SimHEnv <- new.env(size=2)
 
 ################################################################################
 # Input
@@ -44,8 +43,8 @@ simH.opiInitialize <- function(type="C", cap=6, display=NULL) {
 
     if (cap < 0)
         warning("cap is negative in call to opiInitialize (simHenson)")
-    assign("simH.global.type", type, envir = .GlobalEnv)
-    assign("simH.global.cap",  cap , envir = .GlobalEnv)
+    .SimHEnv$type <- type
+    .SimHEnv$cap  <-  cap
 
     if(simDisplay.setupDisplay(display))
         warning("opiInitialize (SimHenson): display parameter may not contain 4 numbers.")
@@ -89,7 +88,7 @@ simH.present <- function(db, cap=6, fpr=0.03, fnr=0.01, tt=30, A, B) {
 # stim is list of type opiStaticStimulus
 #
 simH.opiPresent.opiStaticStimulus <- function(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30) {
-    if (!exists("simH.global.type", envir=.GlobalEnv)) {
+    if (!exists("type", envir=.SimHEnv)) {
         return ( list(
             err = "opiInitialize(type,cap) was not called before opiPresent()",
             seen= NA,
@@ -109,12 +108,12 @@ simH.opiPresent.opiStaticStimulus <- function(stim, nextStim=NULL, fpr=0.03, fnr
 
     simDisplay.present(stim$x, stim$y, stim$color, stim$duration, stim$responseWindow)
 
-    if (.GlobalEnv$simH.global.type == "N") {
-        return(simH.present(cdTodb(stim$level), .GlobalEnv$simH.global.cap, fpr, fnr, tt, -0.066, 2.81))
-    } else if (.GlobalEnv$simH.global.type == "G") {
-        return(simH.present(cdTodb(stim$level), .GlobalEnv$simH.global.cap, fpr, fnr, tt, -0.098, 3.62))
-    } else if (.GlobalEnv$simH.global.type == "C") {
-        return(simH.present(cdTodb(stim$level), .GlobalEnv$simH.global.cap, fpr, fnr, tt, -0.081, 3.27))
+    if (.SimHEnv$type == "N") {
+        return(simH.present(cdTodb(stim$level), .SimHEnv$cap, fpr, fnr, tt, -0.066, 2.81))
+    } else if (.SimHEnv$type == "G") {
+        return(simH.present(cdTodb(stim$level), .SimHEnv$cap, fpr, fnr, tt, -0.098, 3.62))
+    } else if (.SimHEnv$type == "C") {
+        return(simH.present(cdTodb(stim$level), .SimHEnv$cap, fpr, fnr, tt, -0.081, 3.27))
     } else {
         return ( list(
             err = "Unknown error in opiPresent() for SimHenson",

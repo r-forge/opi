@@ -1,9 +1,6 @@
 
 #exportPattern("^[[:alpha:]]+")
 
-export(opi.procedure.load)
-export(opi.procedure.save)
-
 export(ZEST)
 export(ZEST.start)
 export(ZEST.step)
@@ -33,3 +30,4 @@ S3method(simG.opiPresent, opiTemporalStimulus)
 S3method(octo900.opiPresent, opiStaticStimulus)
 S3method(octo900.opiPresent, opiKineticStimulus)
 S3method(octo900.opiPresent, opiTemporalStimulus)
+export(.Octopus900Env)

@@ -37,3 +37,7 @@ OPI 1.4
   - added param to opiInitialize to turn gaze tracking on/off
   - added alias opiInitialise
   - updated docs.
+  - Removed .GlobalEnv and created sub Envs for each Sim
+  - updated docs for opiSetBackground for Octopus 900
+  - deleted opi.procedure.{load|save}
+  - moved chooseOpi() into opi.r

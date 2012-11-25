@@ -24,7 +24,7 @@
 simG.opiClose         <- function() { return(NULL) }
 simG.opiQueryDevice   <- function() { return (list(type="SimGaussian")) }
 
-assign("simG.global.sd"     , NA     , envir = .GlobalEnv)
+.SimGEnv <- new.env(size=1)
 
 ################################################################################
 # Input
@@ -40,7 +40,7 @@ simG.opiInitialize <- function(sd, display=NULL) {
         return(msg)
     }
 
-    assign("simG.global.sd", sd, envir = .GlobalEnv)
+    .SimGEnv$sd <- sd
 
     if (simDisplay.setupDisplay(display))
         warning("opiInitialize (SimGaussian): perhaps display parameter does not contain 4 numbers?")
@@ -60,7 +60,21 @@ simG.opiPresent <- function(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30) { Us
 setGeneric("simG.opiPresent")
 
 simG.opiPresent.opiStaticStimulus <- function(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30) {
-    prSeeing <- fpr + (1-fpr-fnr)*(1-pnorm(cdTodb(stim$level), mean=tt, sd=.GlobalEnv$simG.global.sd))
+    if (!exists("sd", envir=.SimGEnv)) {
+        return ( list(
+            err = "opiInitialize(sd) was not called before opiPresent()",
+            seen= NA,
+            time= NA 
+        ))
+    }
+
+    if (is.null(stim))
+        stop("stim is NULL in call to opiPresent (using simGaussian, opiStaticStimulus)")
+
+    if (as.numeric(.SimGEnv$sd) <= 0)
+        warning("sd is <= 0 in SimGaussian call to opiPresent")
+
+    prSeeing <- fpr + (1-fpr-fnr)*(1-pnorm(cdTodb(stim$level), mean=tt, sd=as.numeric(.SimGEnv$sd)))
 
     simDisplay.present(stim$x, stim$y, stim$color, stim$duration, stim$responseWindow)
 

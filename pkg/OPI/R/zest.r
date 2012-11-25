@@ -50,7 +50,6 @@ ZEST.entropy <- function(state) {
 #   minNotSeenLimit Will terminate if minLimit value not seen this many times
 #   maxSeenLimit    Will terminate if maxLimit value seen this many times
 #   maxPresentations Maximum number of presentations
-#   verbose       1 if you want pdfs returned, 2 is 1+print, 0 for none
 #   makeStim      A helper function to create the required
 #                 OPI data type for passing to opiPresent
 #   stimChoice    "mean", "median", "mode"
