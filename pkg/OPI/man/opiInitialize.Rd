@@ -46,7 +46,7 @@ opiInitialise(...)
     \code{display} is as for SimHenson.
 }
 \subsection{Octopus900}{
-    \code{opiInitialize(eyeSuiteJarLocation, eyeSuiteSettingsLocation, eye, gazeFeed=TRUE)}
+    \code{opiInitialize(eyeSuiteJarLocation, eyeSuiteSettingsLocation, eye, gazeFeed=0)}
 
     If the chosen OPI implementation is \code{Octopus900}, then you must 
     specify two directory/folder names and the eye to be tested.
@@ -59,10 +59,15 @@ opiInitialise(...)
 
     \code{eye} must be either "left" or "right".
 
-    \code{gazeFeed} is a flag to turn on gaze video data in the OPI. If \code{TRUE}, then 
-    a Java driven window appears containing the live feed from the Octopus 900 gaze camera,
-    and \code{opiPresent} returns an image that it estimates to be the video frame
-    when the stimulus is presented.
+    \code{gazeFeed} is 0 for no gaze tracking infromation. 
+    If \code{gazeFeed} is 1, then 
+    a single frame is returned as part of the value from \code{\link{opiPresent}}
+    which is the most recent frame captured. 
+    If \code{gazeFeed} is 2, then 
+    a all frames containing the asterix are returned as part of the value from \code{\link{opiPresent}},
+    which are the frames captured while a static stimulus is displayed. 
+    If \code{gazeFeed} is greater than zero, 
+    a Java driven window appears containing the live feed from the Octopus 900 gaze camera.
 }
 }
 

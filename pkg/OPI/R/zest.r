@@ -325,10 +325,6 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
 #        stopType="S", stopValue= 1.5, tt=loc[3], fpr=0.03, fn=0.01)
 #})
 #
-#opi.procedure.save(states, "Zest_states.opi")
-#
-#states <- opi.procedure.load("Zest_states.opi")
-#
 #    # loop through until all states are "stop"
 #while(!all(st <- unlist(lapply(states, ZEST.stop)))) {
 #    i <- sample(which(!st), 1)  # choose a random, unstopped state

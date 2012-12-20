@@ -15,8 +15,8 @@ opiPresent(stim, nextStim=NULL, ...)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{stim}{
-    A list of class \code{opiStaticStimulus}, \code{opiKineticStimulus}, or
-        \code{opiTemporalStimulus}. 
+    A list of class \code{\link{opiStaticStimulus}}, \code{\link{opiKineticStimulus}}, or
+        \code{\link{opiTemporalStimulus}}. 
   }
   \item{nextStim}{
     As for \code{stim}, but the next presentation to be made. 
@@ -30,7 +30,7 @@ opiPresent(stim, nextStim=NULL, ...)
   }
 }
 \details{
-\code{opiPresent} 
+\code{\link{opiPresent}}
 is blocking in that it will not return until either a response
 is obtained, or at least the responseWindow milliseconds has expired. (Note
 that more time might have expired.) Specifying \code{nextStim} 
@@ -40,12 +40,12 @@ response to \code{stim} to make preparations
 for the next stimuli. (For example retargeting the projector or moving
 aperture and/or filter wheels.) 
 There is no guarantee that the next call to
-\code{opiPresent} will have \code{nextStim} as the first argument; this 
+\code{\link{opiPresent}} will have \code{nextStim} as the first argument; this 
 should be checked by the machine specific implementations.
 
 Also note that to allow for different parameters depending on the 
 implementation chosen with \code{chooseOpi}, every parameter MUST
-be named in a call to \code{opiPresent}.
+be named in a call to \code{\link{opiPresent}}.
 
 \subsection{SimHenson}{
 
@@ -83,7 +83,7 @@ set with \code{opiInitialize}.
 \code{opiPresent(stim, nextStim=NULL)}
 
 If the chosen OPI implementation is \code{SimYes}, then
-the response to a stimuli is always yes, hence \code{opiPresent} always returns 
+the response to a stimuli is always yes, hence \code{\link{opiPresent}} always returns 
 \code{err=NULL}, \code{seen=TRUE}, and \code{time=0}.
 }
 
@@ -92,7 +92,7 @@ the response to a stimuli is always yes, hence \code{opiPresent} always returns
 \code{opiPresent(stim, nextStim=NULL)}
 
 If the chosen OPI implementation is \code{SimNo}, then
-the response to a stimuli is always no, hence \code{opiPresent} always returns 
+the response to a stimuli is always no, hence \code{\link{opiPresent}} always returns 
 \code{err=NULL}, \code{seen=FALSE}, and \code{time=0}.
 }
 
@@ -113,10 +113,11 @@ until the response from the subject if \code{seen} is \code{TRUE}.
 If \code{seen} is \code{FALSE}, this
 value is undefined.
 }
-\item{frame}{Only returned for Octopus 900. A byte array of pixels for an image that is 320 wide. The
-image is the OPI's best guess at when the stimuli was presented. It is taken from the video stream at
-the time that the "present stimuli" message is sent to the Octopus 900. There is no gaurantee that
-this will be the actual stimulus presentation time.}
+\item{frames}{Only returned for Octopus 900. A 2D byte array of pixels for an image that is 320 wide. 
+See the parameter \code{gazeFeed} for \code{\link{opiInitialize}} to control what frames are returned.
+}
+\item{numFrames}{Only returned for Octopus 900. The number of frames in \code{frames}.
+}
 }
 \references{
 Please cite:

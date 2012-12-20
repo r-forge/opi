@@ -117,7 +117,8 @@ GOLDMANN <- c(6.5, 13, 26, 52, 104) / 60
 # INPUT: 
 #   eyeSuiteJarLocation      = dir name containing EyeSuite Jar files
 #   eyeSuiteSettingsLocation = dir name containing EyeSuite settings
-#   eye                 = "right" or "left"
+#   eye                      = "right" or "left"
+#   gazeFeed                 = 0 (none), 1 (single frame), 2 (all frames with *)
 #
 #   Both input dirs should INCLUDE THE TRAILING SLASH.
 #
@@ -137,14 +138,20 @@ octo900.opiInitialize <- function(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocati
     if (eye != "left" && eye != "right")
         stop("The eye argument of opiInitialize must be 'left' or 'right'")
 
-    .jinit(c(
-	    paste(eyeSuiteJarLocation, "HSEyeSuiteBasic.jar", sep=""),
-	    paste(eyeSuiteJarLocation, "HSEyeSuiteExtPerimetryViewer.jar", sep=""),
-	    paste(eyeSuiteJarLocation, "HSEyeSuiteExtPerimetry.jar", sep=""),
-        paste(.Library,"OPIOctopus900","jgoodies-binding-2.5.0.jar", sep="/"),
-        paste(.Library,"OPIOctopus900","jgoodies-common-1.2.1.jar", sep="/"),
-        paste(.Library,"OPIOctopus900","java", sep="/")
-    ))
+    .jinit(classpath=dir(eyeSuiteJarLocation, pattern="*.jar", full.names=TRUE, recursive=TRUE),
+        #param=getOption("java.parameters"),
+        #"some random stuff",
+        force.init=TRUE
+    )
+
+	    #paste(eyeSuiteJarLocation, "HSEyeSuiteBasic.jar", sep=""),
+	    #paste(eyeSuiteJarLocation, "HSEyeSuiteExtPerimetryViewer.jar", sep=""),
+	    #paste(eyeSuiteJarLocation, "HSEyeSuiteExtPerimetry.jar", sep=""),
+        #paste(.Library,"OPIOctopus900","jgoodies-binding-2.5.0.jar", sep="/"),
+        #paste(.Library,"OPIOctopus900","jgoodies-common-1.2.1.jar", sep="/"),
+        #paste(.Library,"OPIOctopus900","java", sep="/")
+    #))
+    .jaddClassPath(paste(.Library,"OPIOctopus900","java", sep="/"))
 
     print(.jclassPath())    # just for debugging, not really needed
 
@@ -153,12 +160,7 @@ octo900.opiInitialize <- function(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocati
         # the controling object
     assign("octopusObject", .jnew("opi.Opi", eyeSuiteSettingsLocation, eye), envir = .Octopus900Env)
 
-    if (gazeFeed) {
-        gaze <- 1
-    } else {
-        gaze <- 0
-    }
-	err <- .jcall(.Octopus900Env$octopusObject, "I", "opiInitialize", gaze)
+	err <- .jcall(.Octopus900Env$octopusObject, "I", "opiInitialize", gazeFeed)
 	if (err == 0)
 		return(NULL)
 	else
@@ -205,21 +207,14 @@ octo900.opiPresent.opiStaticStimulus <- function(stim, nextStim) {
 	done <- TRUE
     	tryCatch(ret <- .jcall(.Octopus900Env$octopusObject, "Lopi/OpiPresentReturn;", "opiPresent", stimObj, nextObj), 
 	             java.util.ConcurrentModificationException = function(e) { done = FALSE })
-#print(paste("Done = ",done))
-#if (is.null(ret))
-#    print(paste("ret = NULL"))
-#else {
-#	print(paste("err =",.jcall(ret, "S", "getErr")))
-#	print(paste("seen=",.jcall(ret, "I", "getSeen")))
-#	print(paste("time=",.jcall(ret, "I", "getTime")))
-#}
     }
 
     return(list(
 	    err =.jcall(ret, "S", "getErr"), 
 	    seen=.jcall(ret, "I", "getSeen"), 
 	    time=.jcall(ret, "I", "getTime"),
-	    frame=.jcall(ret, "[B", "getFrame")
+	    frames=.jcall(ret, "[[B", "getFrames"),
+        numFrames=.jcall(ret, "I", "getNumFrames")
 	))
 }
 
