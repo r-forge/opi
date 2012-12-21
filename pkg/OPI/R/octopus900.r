@@ -128,7 +128,7 @@ GOLDMANN <- c(6.5, 13, 26, 52, 104) / 60
 #
 #######################################################################
 octo900.opiInitialize <- function(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocation=NA, eye=NA,
-                            gazeFeed=TRUE) {
+                            gazeFeed=0) {
     if (is.na(eyeSuiteJarLocation))
         stop("You must specify the EyeSuite jar file folder in your call to opiInitialize")
     if (is.na(eyeSuiteSettingsLocation))
