@@ -137,7 +137,7 @@ octo900.opiInitialize <- function(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocati
     if (eye != "left" && eye != "right")
         stop("The eye argument of opiInitialize must be 'left' or 'right'")
 
-    options("java.parameters"="-Xmx1024m -Xss64m")
+    #options("java.parameters"="-Xmx1024m -Xss64m")
 
     hsJars <- dir(eyeSuiteJarLocation, pattern="*.jar", full.names=TRUE, recursive=TRUE)
     .jinit(classpath=hsJars, 
