@@ -41,3 +41,4 @@ OPI 1.4
   - updated docs for opiSetBackground for Octopus 900
   - deleted opi.procedure.{load|save}
   - moved chooseOpi() into opi.r
+  - NOTE - must pass junk params in .jinit() and .jpackage wont work...

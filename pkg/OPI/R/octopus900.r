@@ -127,8 +127,7 @@ GOLDMANN <- c(6.5, 13, 26, 52, 104) / 60
 # @return 2 if failed to make ready
 #
 #######################################################################
-octo900.opiInitialize <- function(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocation=NA, eye=NA,
-                            gazeFeed=0) {
+octo900.opiInitialize <- function(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocation=NA, eye=NA, gazeFeed=0) {
     if (is.na(eyeSuiteJarLocation))
         stop("You must specify the EyeSuite jar file folder in your call to opiInitialize")
     if (is.na(eyeSuiteSettingsLocation))
@@ -138,20 +137,18 @@ octo900.opiInitialize <- function(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocati
     if (eye != "left" && eye != "right")
         stop("The eye argument of opiInitialize must be 'left' or 'right'")
 
-    .jinit(classpath=dir(eyeSuiteJarLocation, pattern="*.jar", full.names=TRUE, recursive=TRUE),
-        #param=getOption("java.parameters"),
-        #"some random stuff",
+    options("java.parameters"="-Xmx1024m -Xss64m")
+
+    hsJars <- dir(eyeSuiteJarLocation, pattern="*.jar", full.names=TRUE, recursive=TRUE)
+    .jinit(classpath=hsJars, 
+        params=getOption("java.parameters"),
+        "some random stuff",
         force.init=TRUE
     )
 
-	    #paste(eyeSuiteJarLocation, "HSEyeSuiteBasic.jar", sep=""),
-	    #paste(eyeSuiteJarLocation, "HSEyeSuiteExtPerimetryViewer.jar", sep=""),
-	    #paste(eyeSuiteJarLocation, "HSEyeSuiteExtPerimetry.jar", sep=""),
-        #paste(.Library,"OPIOctopus900","jgoodies-binding-2.5.0.jar", sep="/"),
-        #paste(.Library,"OPIOctopus900","jgoodies-common-1.2.1.jar", sep="/"),
-        #paste(.Library,"OPIOctopus900","java", sep="/")
-    #))
-    .jaddClassPath(paste(.Library,"OPIOctopus900","java", sep="/"))
+    .jaddClassPath(paste(.Library,"OPIOctopus900","java", "opi.jar", sep="/"))
+    .jaddClassPath(paste(.Library,"OPIOctopus900","jgoodies-binding-2.5.0.jar", sep="/"))
+    .jaddClassPath(paste(.Library,"OPIOctopus900","jgoodies-common-1.2.1.jar", sep="/"))
 
     print(.jclassPath())    # just for debugging, not really needed
 
@@ -160,7 +157,7 @@ octo900.opiInitialize <- function(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocati
         # the controling object
     assign("octopusObject", .jnew("opi.Opi", eyeSuiteSettingsLocation, eye), envir = .Octopus900Env)
 
-	err <- .jcall(.Octopus900Env$octopusObject, "I", "opiInitialize", gazeFeed)
+	err <- .jcall(.Octopus900Env$octopusObject, "I", "opiInitialize", as.double(gazeFeed))
 	if (err == 0)
 		return(NULL)
 	else
