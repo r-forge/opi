@@ -32,6 +32,7 @@
 # Author: Andrew Turpin
 #
 # July 2012
+# Modified Feb 2013: opiPresent returns only a single frame
 #
 
 require(rJava)
@@ -40,7 +41,8 @@ require(rJava)
 # .Octopus900Env$octopusObject is the java Opi object set in opiInitialize
 # .Octopus900Env$... are lots of colors and Fixation constants set in setupBackgroundConstants()
 ###################################################################
-.Octopus900Env <- new.env()
+if (!exists(".Octopus900Env"))
+    .Octopus900Env <- new.env()
 
 ###########################################################################
 # Get values for fixation, color and bg intensity constants
@@ -150,7 +152,7 @@ octo900.opiInitialize <- function(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocati
     .jaddClassPath(paste(.Library,"OPIOctopus900","jgoodies-binding-2.5.0.jar", sep="/"))
     .jaddClassPath(paste(.Library,"OPIOctopus900","jgoodies-common-1.2.1.jar", sep="/"))
 
-    print(.jclassPath())    # just for debugging, not really needed
+    #print(.jclassPath())    # just for debugging, not really needed
 
     setupBackgroundConstants()
 
@@ -208,10 +210,12 @@ octo900.opiPresent.opiStaticStimulus <- function(stim, nextStim) {
 
     return(list(
 	    err =.jcall(ret, "S", "getErr"), 
-	    seen=.jcall(ret, "I", "getSeen"), 
+	    seen=ifelse(.jcall(ret, "I", "getSeen") == 0, 0, 1),
 	    time=.jcall(ret, "I", "getTime"),
-	    frames=.jcall(ret, "[[B", "getFrames"),
-        numFrames=.jcall(ret, "I", "getNumFrames")
+	    frames=.jcall(ret, "[I", "getFrameInt"),
+        numFrames=.jcall(ret, "I", "getNumFrames"),
+        width=.jcall(ret, "I", "getWidth"),
+        height=.jcall(ret, "I", "getHeight")
 	))
 }
 
@@ -254,7 +258,7 @@ octo900.opiPresent.opiTemporalStimulus <- function(stim, nextStim=NULL, ...) {
 
     return(list(
 	    err =.jcall(ret, "S", "getErr"), 
-	    seen=.jcall(ret, "I", "getSeen"), 
+	    seen=ifelse(.jcall(ret, "I", "getSeen") == 0, 0, 1),
 	    time=.jcall(ret, "I", "getTime")
 	))
 
@@ -300,7 +304,7 @@ octo900.opiPresent.opiKineticStimulus <- function(stim, ...) {
 
     return(list(
 	    err =.jcall(ret, "S", "getErr"), 
-	    seen=.jcall(ret, "I", "getSeen"), 
+	    seen=ifelse(.jcall(ret, "I", "getSeen") == 0, 0, 1),
 	    time=.jcall(ret, "I", "getTime")
 	))
 

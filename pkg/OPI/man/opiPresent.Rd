@@ -63,6 +63,9 @@ is set with the call to \code{opiInitialize}, and \code{A} and \code{B}
 are from Table 1 in Henson et al (2000). Which values are used is
 determined by \code{simH.type} which is also set in the call to
 \code{opiInitialize}.
+
+Note that if the stimulus value is less than zero, then the Henson
+formula is not used. The probability of seeing is \code{fpr}.
 }
 
 
@@ -113,10 +116,15 @@ until the response from the subject if \code{seen} is \code{TRUE}.
 If \code{seen} is \code{FALSE}, this
 value is undefined.
 }
-\item{frames}{Only returned for Octopus 900. A 2D byte array of pixels for an image that is 320 wide. 
+\item{frames}{Only returned for Octopus 900. An array of integer 0..255 for gaze image. 
+In version 1.5, only a single frame is returned.
 See the parameter \code{gazeFeed} for \code{\link{opiInitialize}} to control what frames are returned.
 }
 \item{numFrames}{Only returned for Octopus 900. The number of frames in \code{frames}.
+}
+\item{width}{Width of frame in \code{frames}.
+}
+\item{height}{Height of frame in \code{frames}.
 }
 }
 \references{

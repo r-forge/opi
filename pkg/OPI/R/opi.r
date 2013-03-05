@@ -140,7 +140,7 @@ chooseOpi <- function(opiImplementation) {
 # Simply send the opi*() call to the right implementation
 ####################################################################################
 opiDistributor <- function(method, ...) {
-    if (is.na(.OpiEnv$chooser)) {
+    if (!exists("chooser", where=.OpiEnv) || is.na(.OpiEnv$chooser)) {
         msg <- "You have not chosen a valid OPI implementation. Use chooseOpi()"
         warning(msg)
         return(msg)

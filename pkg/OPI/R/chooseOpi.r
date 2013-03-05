@@ -30,6 +30,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+###################################################################
+# .Octopus900Env$chooseOpi is index of chosen OPI
+###################################################################
+if (!exists(".Octopus900Env"))
+    .Octopus900Env <- new.env()
+
 ################################################################################
 # A list of available OPI implementations for chooseOpi to choose from, and 
 # the opi* functions to index using opi.global.chooser.
@@ -124,11 +130,11 @@ chooseOpi <- function(opiImplementation) {
         #
     i <- which(opiImplementation == possible)
     if (length(i) == 0) {
-        assign("opi.global.chooser", NA, envir = .GlobalEnv)
+        assign("opi.global.chooser", NA, envir = .Octopus900Env)
         warning(paste("chooseOpi() cannot find opiImplementation",opiImplementation))
         return(FALSE)
     } else {
-        assign("opi.global.chooser", i, envir = .GlobalEnv)
+        assign("opi.global.chooser", i, envir = .Octopus900Env)
         return(TRUE)
     }
 }

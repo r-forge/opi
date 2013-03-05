@@ -195,6 +195,7 @@ ZEST.final <- function(state) {
     } else if (state$stimChoice == "median") {
         final <- state$domain[which.min(abs(cumsum(state$pdf) - 0.5))]
     } 
+
     return(final)
 }#ZEST.final
 
