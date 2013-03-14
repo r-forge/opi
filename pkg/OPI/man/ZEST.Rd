@@ -110,7 +110,7 @@ Extra parameters to pass to the opiPresent function
 \code{ZEST} returns a list containing
 \itemize{
 \item{npres:}{ Total number of presentations used.}
-\item{respSeq:}{ Response sequence stored as a list of (stimulus, seen) pairs.}
+\item{respSeq:}{Response sequence stored as a matrix: row 1 is dB values, row 2 is 1/0 for seen/not-seen.}
 \item{pdfs:}{ If \code{verbose} is bigger than 0, then this is a list of the pdfs used for each presentation,
 otherwise NULL.}
 \item{final}{ The mean/median/mode of the final pdf, depending on \code{stimChoice}, which is the determined threshold.}

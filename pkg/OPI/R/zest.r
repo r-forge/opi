@@ -219,7 +219,7 @@ ZEST.final <- function(state) {
 #   ...           Parameters for opiPresent
 # Returns a list containing
 #   npres    Total number of presentations
-#   respSeq  Response sequence stored as a list of (seen,dB) pairs
+#   respSeq  Response sequence stored as a matrix: row 1 = dB, row 2 = response 1/0
 #   pdfs     Sequence of pdfs used (if verbose)
 #
 # Note 
@@ -253,17 +253,12 @@ ZEST <- function(domain=0:40, prior=rep(1/length(domain),length(domain)),
             cat(sprintf("stdev= %8.4g H= %8.4g\n", ZEST.stdev(state), ZEST.entropy(state)))
         }
         if (verbose > 0)
-            pdfs <- c(pdfs, list(pdf))
+            pdfs <- c(pdfs, list(state$pdf))
     }
 
-    zip <- function(a,b) {
-        res <- NULL
-        for(i in 1:length(a))
-            res <- c(res, list(c(a[i],b[i])))
-    }
     return(list(
         npres=tail(state$numPresentations,1),        # number of presentations
-        respSeq=zip(state$stimuli, state$responses), # reposnse sequence (list of pairs)
+        respSeq=mapply(c, state$stimuli, state$responses), # reposnse sequence (list of pairs)
         pdfs=pdfs,                                   # list of pdfs used (if verbose > 0)
         final=ZEST.final(state)                      # final threshold estimate
     ))

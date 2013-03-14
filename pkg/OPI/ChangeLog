@@ -49,3 +49,5 @@ OPI 1.5
   - added !exist to opiDistributor
   - simHenson uses false pos rate to determine seen if db < 0 
   - changed ZEST.final to return "limit" 
+  - fixed verbose=1 bug in zest.r
+  - changed respSeq return type from ZEST
