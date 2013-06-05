@@ -249,7 +249,7 @@ states <- lapply(locations, function(loc) {
         minStimulus=0,
         maxStimulus=40,
         makeStim=makeStimHelper(db,n,loc[1],loc[2]),
-        stopType="S", stopValue= 1.5, tt=loc[3], fpr=0.03, fn=0.01)
+        stopType="S", stopValue= 1.5, tt=loc[3], fpr=0.03, fnr=0.01)
 })
 
     # Loop through until all states are "stop"

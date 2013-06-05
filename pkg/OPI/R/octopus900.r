@@ -152,7 +152,7 @@ octo900.opiInitialize <- function(eyeSuiteJarLocation=NA, eyeSuiteSettingsLocati
     .jaddClassPath(paste(.Library,"OPIOctopus900","jgoodies-binding-2.5.0.jar", sep="/"))
     .jaddClassPath(paste(.Library,"OPIOctopus900","jgoodies-common-1.2.1.jar", sep="/"))
 
-    #print(.jclassPath())    # just for debugging, not really needed
+    print(.jclassPath())    # just for debugging, not really needed
 
     setupBackgroundConstants()
 

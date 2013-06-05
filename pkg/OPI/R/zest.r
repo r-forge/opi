@@ -1,7 +1,7 @@
 #
 # ZEST algorithm that maintains state in a list - good for interleaved.
-# Based on zest.r
 # Includes
+#     ZEST          # just for a single location
 #     ZEST.start    # initialise list state
 #     ZEST.step     # take state, present stim, update and return state
 #     ZEST.stop     # boolean - true if state is finished
