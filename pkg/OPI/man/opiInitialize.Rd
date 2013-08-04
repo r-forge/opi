@@ -36,6 +36,26 @@ opiInitialise(...)
     The color of the plot area can be set with \code{opiSetBackground}, and the 
     color of the displayed point is determined by the stimulus passed to \code{opiPresent}.
 }
+\subsection{SimHensonRT}{
+    \code{opiInitialize(type="C", cap=6, display=NULL, rtType="sigma")}
+
+    If the chosen OPI implementation is \code{SimHensonRT}, then
+    the first three parameters are as in \code{SimHenson}, and 
+  \code{rtType} is one of:
+    \code{"sigma"}, signifying that distance between assumed threshold and stimulus value is in assumed sigma units; and 
+    \code{"db"}, signifying that distance between assumed threshold and stimulus value is in dB units.
+
+    If you wish to use your own response time data, simply specify
+    \code{rtType="sigma"} and replace the file in
+    \code{.Library/OPI/data/RtSigmaUnits.RData}. The file contains
+    a single data frame named \code{RtSigmaUnits}
+    that has three columns:
+    \code{"Rt"}, reponse time; 
+    \code{"Dist"}, signifying that distance between assumed threshold and stimulus value is your units; and
+    \code{"Person"}, which identifies the subject from which the \code{Rt} and \code{Dist} was taken. 
+    (Note that \code{RtSigmaUnits$Person} is currently unused in SimHensonRT, so omitting it might work.)
+    The data.frame is saved using \code{save(RtSigmaUnits, file="RtSigmaUnits.RData")}.
+}
 \subsection{SimGaussian}{
     \code{opiInitialize(sd, display=NULL)}
 

@@ -76,6 +76,14 @@ opi.implementations <- list(
         opiSetBackground = "simG.opiSetBackground",
         opiQueryDevice   = "simG.opiQueryDevice",
         opiPresent       = "simG.opiPresent"
+    ),
+    list(
+        name="SimHensonRT",
+        opiInitialize    = "simH_RT.opiInitialize",
+        opiClose         = "simH_RT.opiClose",
+        opiSetBackground = "simH_RT.opiSetBackground",
+        opiQueryDevice   = "simH_RT.opiQueryDevice",
+        opiPresent       = "simH_RT.opiPresent"
     )
 )
 
@@ -96,6 +104,8 @@ chooseOpi <- function(opiImplementation) {
         #
         # If NULL, print the list of possible
         #
+    if (missing(opiImplementation))
+        opiImplementation <- NULL
     if (is.null(opiImplementation)) {
         print(possible)
         return(TRUE)
