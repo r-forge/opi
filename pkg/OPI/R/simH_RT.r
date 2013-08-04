@@ -32,17 +32,16 @@ simH_RT.opiQueryDevice   <- function() { return (list(type="SimHensonRT")) }
 #   type N|G|C for the three Henson params
 #   cap  dB value for capping stdev form Henson formula
 #   display Dimensions of plot area (-x,+x,-y,+y) to display stim. No display if NULL
-#   rtType either "sigma" or "db"
+#   rtData data.frame with colnames == "Rt", "Dist", "Person"
 #
 # Side effects if successful:
 #   Set .SimHRTEnv$type   to type
 #   Set .SimHRTEnv$cap    to cap
-#   Set .SimHRTEnv$rtType to rtType
-#   Set .SimHRTEnv$rtData to 3 col data frame colnames == "Rt", "Dist", "Person"
+#   Set .SimHRTEnv$rtData to 3 col data frame to rtData
 #
 # Return NULL if successful, string error message otherwise  
 ################################################################################
-simH_RT.opiInitialize <- function(type="C", cap=6, display=NULL, rtType="sigma", rtFP=1:1600) {
+simH_RT.opiInitialize <- function(type="C", cap=6, display=NULL, rtData, rtFP=1:1600) {
     if (!is.element(type,c("N","G","C"))) {
         msg <- paste("Bad 'type' specified for SimHensonRT in opiInitialize():",type)
         warning(msg)
@@ -57,21 +56,28 @@ simH_RT.opiInitialize <- function(type="C", cap=6, display=NULL, rtType="sigma",
     if(simDisplay.setupDisplay(display))
         warning("opiInitialize (SimHensonRT): display parameter may not contain 4 numbers.")
 
-    if (rtType == "sigma") {
-        load(paste(.Library,"/OPI/data/RtSigmaUnits.RData",sep=""), envir=.SimHRTEnv)
-        assign("rtData", .SimHRTEnv$RtSigmaUnits, envir=.SimHRTEnv)
-    } else if (rtType == "db") {
-        load(paste(.Library,"/OPI/data/RtDbUnits.RData",sep=""), envir=.SimHRTEnv)
-        assign("rtData", .SimHRTEnv$RtDbUnits, envir=.SimHRTEnv)
-    } else {
-        msg <- paste("opiInitialize (SimHensonRT): unknown response time data type",rtType)
+    #if (rtType == "sigma") {
+    #    load(paste(.Library,"/OPI/data/RtSigmaUnits.RData",sep=""), envir=.SimHRTEnv)
+    #    assign("rtData", .SimHRTEnv$RtSigmaUnits, envir=.SimHRTEnv)
+    #} else if (rtType == "db") {
+    #    load(paste(.Library,"/OPI/data/RtDbUnits.RData",sep=""), envir=.SimHRTEnv)
+    #    assign("rtData", .SimHRTEnv$RtDbUnits, envir=.SimHRTEnv)
+    #} else {
+    #    msg <- paste("opiInitialize (SimHensonRT): unknown response time data type",rtType)
+    #    warning(msg)
+    #    return(msg)
+    #}
+
+    if (nrow(rtData) < 100) 
+        warning("opiInitialize (SimHensonRT): Less than 100 rows in rtData; that's wierd")
+    if (ncol(rtData) != 3 || !all(colnames(RtSigmaUnits) == c("Rt", "Dist", "Person"))) {
+        msg <- "opiInitialize (SimHensonRT): rtData must have 3 columns: Rt, Dist, Person. See data(RtSigmaUnits) for example."
         warning(msg)
         return(msg)
     }
+    assign("rtData", rtData, envir=.SimHRTEnv)
 
     #print(.SimHRTEnv$rtData[1:10,])
-
-    assign("rtType", rtType, envir=.SimHRTEnv)
 
     if (length(rtFP) < 1) {
         msg <- "opiInitialize (SimHensonRT): rtFP must have at least 1 element"

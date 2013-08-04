@@ -37,24 +37,18 @@ opiInitialise(...)
     color of the displayed point is determined by the stimulus passed to \code{opiPresent}.
 }
 \subsection{SimHensonRT}{
-    \code{opiInitialize(type="C", cap=6, display=NULL, rtType="sigma")}
+    \code{opiInitialize(type="C", cap=6, display=NULL, rtData)}
 
     If the chosen OPI implementation is \code{SimHensonRT}, then
     the first three parameters are as in \code{SimHenson}, and 
-  \code{rtType} is one of:
-    \code{"sigma"}, signifying that distance between assumed threshold and stimulus value is in assumed sigma units; and 
-    \code{"db"}, signifying that distance between assumed threshold and stimulus value is in dB units.
-
-    If you wish to use your own response time data, simply specify
-    \code{rtType="sigma"} and replace the file in
-    \code{.Library/OPI/data/RtSigmaUnits.RData}. The file contains
-    a single data frame named \code{RtSigmaUnits}
-    that has three columns:
+  \code{rtData} is a data frame with 3 columns:
     \code{"Rt"}, reponse time; 
     \code{"Dist"}, signifying that distance between assumed threshold and stimulus value is your units; and
     \code{"Person"}, which identifies the subject from which the \code{Rt} and \code{Dist} was taken. 
-    (Note that \code{RtSigmaUnits$Person} is currently unused in SimHensonRT, so omitting it might work.)
-    The data.frame is saved using \code{save(RtSigmaUnits, file="RtSigmaUnits.RData")}.
+
+    This package contains \code{RtSigmaUnits} or \code{RtDbUnits} 
+    that can be loaded with the commands
+    \code{data(RtSigmaUnits)} or \code{data(RtDbUnits)}.
 }
 \subsection{SimGaussian}{
     \code{opiInitialize(sd, display=NULL)}
@@ -139,6 +133,13 @@ if (!is.null(opiInitialize(type="C", cap=6)))
     # and display the stimuli in a plot region
 chooseOpi("SimHenson")
 if (!is.null(opiInitialize(type="C", cap=6, display=c(-30,30,-30,30))))
+    stop("opiInitialize failed")
+
+    # Set up a simple simulation for white-on-white perimetry
+    # and display the stimuli in a plot region
+chooseOpi("SimHensonRT")
+data(RtSigmaUnits)
+if (!is.null(opiInitialize(type="C", cap=6, display=c(-30,30,-30,30), rtData=RtSigmaUnits, rtFP=1:100)))
     stop("opiInitialize failed")
 
     # Set up a simulation using a psychometric function that is

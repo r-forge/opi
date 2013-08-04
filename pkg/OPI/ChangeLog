@@ -51,3 +51,6 @@ OPI 1.5
   - changed ZEST.final to return "limit" 
   - fixed verbose=1 bug in zest.r
   - changed respSeq return type from ZEST
+
+OPI 1.6
+ - added SimHensonRT and related man and data
