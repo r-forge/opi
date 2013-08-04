@@ -2,7 +2,7 @@
 \usepackage{a4wide}
 
 \title{A beginners guide to the OPI in R}
-\date{July 2012}
+\date{February 2013}
 \author{Andrew Turpin aturpin@unimelb.edu.au}
 
 \begin{document}
@@ -58,9 +58,9 @@ require} functions as follows.
 If R complains about these with an error message, return to Section~\ref{sec-install}.
 
 Now you must select which implementation of the OPI you want to
-use: a simulation, or a machine. This is done with the {\tt chooseOPI}
+use: a simulation, or a machine. This is done with the {\tt chooseOpi}
 function. You can get a list of the available implementations by
-calling {\tt chooseOPI} with an argument of {\tt NULL}.
+calling {\tt chooseOpi} with an argument of {\tt NULL}.
 
 \begin{verbatim}
 > chooseOpi(NULL)
@@ -70,8 +70,8 @@ calling {\tt chooseOPI} with an argument of {\tt NULL}.
 [1] TRUE
 \end{verbatim}
 
-This shows us that there are three implementations available. Let us choose
-the Octopus900 one.
+This shows us that there are five implementations available.
+Let us choose the Octopus900 one.
 
 \begin{verbatim}
 > chooseOpi("Octopus900") 
@@ -95,23 +95,26 @@ then the function name. For example:
 
 Note that all arguments to opi functions must be named.
 
-For the Octopus 900, two folder names and the eye to be tested is required.
+For the Octopus 900, two folder names, the eye to be tested and the gaze tracking flag are required.
 \begin{verbatim}
 > opiInitialize(eyeSuiteJarLocation="c:\Program Files\EyeSuite\",
 + eyeSuiteSettingsLocation="c:\Documents and Settings\All Users\HAAG STREIT\EyeSuite\",
-+ eye="right")
++ eye="right",
++ gazeFeed=0)
 NULL
 \end{verbatim}
 The first folder is the location of the EyeSuite software. The folder should contain files
 named {\tt HS$\ast$.jar}.
 The second folder is the location of the EyeSuite settings.
+The fourth controls the gaze tracking information that is sent back from the Octopus ({\tt gazeFeed=0} is none).
 This command should return NULL if successful.
 
 Note that if the Octopus 900 has just been turned on, there will
 be a short delay before this function returns while the machine is
 calibrated. You should hear whirring and clicking noises from the
-machine.  Also make sure that EyeSuite is not trying to use the
+machine.  Make sure that EyeSuite is not trying to use the
 Octopus 900 at the same time (close EyeSuite).
+Also make sure the room is dark, or the bowl is covered during calibration.
 
 Now you can present a stimuli, and get a response. A stimuli is specified with a {\tt
 opiStaticStimulus} object, which is just a list of named values with a class of {\tt
@@ -130,8 +133,8 @@ OPI Standard document, and in the help files (remember {\tt
 ?opiStaticStimulus}).
 
 Note the use of the function {\tt dbTocd} for converting db values
-in to cd/m$^2$, which is what an {\tt opiStaticStimulus} should
-specify the stimulus level in. There is also a {\tt cdTodb} function.
+in to cd/m$^2$, which are the units in which an {\tt opiStaticStimulus} 
+stimulus level is specified. There is also a {\tt cdTodb} function.
 
 Often it is useful to have a helper function to construct the {\tt
 opiStaticStimulus} for you, to save lots of typing. For example,
@@ -184,7 +187,7 @@ You can choose one of these with the {\tt opiSetBackgound} function, specifying 
 argument as one of the constants in the final column.
 For example,
 \begin{verbatim}
-> opiSetBackgound(color=opi.O900.MET_COL_BW)
+> opiSetBackgound(color=.Octopus900Env\$MET_COL_BW)
 \end{verbatim}
 
 \begin{table}
@@ -193,12 +196,12 @@ For example,
 \hline
 Stimulus & Background & OPI Constant \\
 \hline
-White    & White & opi.O900.MET\_COL\_WW \\
-Blue     & White & opi.O900.MET\_COL\_BW \\
-Red      & White & opi.O900.MET\_COL\_RW \\
-White    & Yellow & opi.O900.MET\_COL\_WY \\
-Blue     & Yellow & opi.O900.MET\_COL\_BY \\
-Red      & Yellow & opi.O900.MET\_COL\_RY \\
+White    & White &  .Octopus900Env\$MET\_COL\_WW \\
+Blue     & White &  .Octopus900Env\$MET\_COL\_BW \\
+Red      & White &  .Octopus900Env\$MET\_COL\_RW \\
+White    & Yellow & .Octopus900Env\$MET\_COL\_WY \\
+Blue     & Yellow & .Octopus900Env\$MET\_COL\_BY \\
+Red      & Yellow & .Octopus900Env\$MET\_COL\_RY \\
 \hline
 \end{tabular}
 \caption{\label{tab-met-col}Six possible color combinations on the Octopus 900}
@@ -218,13 +221,13 @@ See {\tt ?opiSetBackgound} for more information.
 
 The Octopus 900, has 3 possible fixation targets
 \begin{verbatim}
-opi.O900.FIX_RING
-opi.O900.FIX_CROSS
-opi.O900.FIX_CENTRE
+.Octopus900Env\$FIX_RING
+.Octopus900Env\$FIX_CROSS
+.Octopus900Env\$FIX_CENTRE
 \end{verbatim}
 and each can be the {\tt fixation} argument of {\tt opiSetBackgound}. For example, 
 \begin{verbatim}
-opiSetBackgound(fixation=opi.O900.FIX_RING)
+opiSetBackgound(fixation=.Octopus900Env\$FIX_RING)
 \end{verbatim}
 
 You can also set the intensity of the fixation marker as a percentage from 0 to 100 using the

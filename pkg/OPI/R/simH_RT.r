@@ -112,7 +112,7 @@ setGeneric("simH_RT.opiPresent")
 # Note prob seeing <0 is always false positive rate (but false neg still poss)
 # Response time for false positive is uniform sample from .SimHRTEnv$rtFP
 #
-simH_RT.present <- function(db, cap=6, fpr=0.03, fnr=0.01, tt=30, A, B) {
+simH_RT.present <- function(db, cap=6, fpr=0.03, fnr=0.01, tt=30, dist, A, B) {
 
     falsePosRt <- function() {
         if(length(.SimHRTEnv$rtFP) < 2) 
@@ -147,8 +147,6 @@ simH_RT.present <- function(db, cap=6, fpr=0.03, fnr=0.01, tt=30, A, B) {
     pxVar <- min(cap, exp(A*tt + B)) # variability of patient, henson formula 
     if ( runif(1) < 1 - pnorm(db, mean=tt, sd=pxVar)) {
 
-        dist <- (db - tt) / ifelse(.SimHRTEnv$rtType == "sigma", pxVar, 1.0)
-
         o <- head(order(abs(.SimHRTEnv$rtData$Dist - dist)), 100)
 
         return(list(err=NULL, seen=TRUE, time=sample(.SimHRTEnv$rtData[o,"Rt"], 1)))
@@ -160,7 +158,7 @@ simH_RT.present <- function(db, cap=6, fpr=0.03, fnr=0.01, tt=30, A, B) {
 #
 # stim is list of type opiStaticStimulus
 #
-simH_RT.opiPresent.opiStaticStimulus <- function(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30) {
+simH_RT.opiPresent.opiStaticStimulus <- function(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30, dist=stim$level - tt) {
     if (!exists("type", envir=.SimHRTEnv)) {
         return ( list(
             err = "opiInitialize(type,cap) was not called before opiPresent()",
@@ -182,11 +180,11 @@ simH_RT.opiPresent.opiStaticStimulus <- function(stim, nextStim=NULL, fpr=0.03, 
     simDisplay.present(stim$x, stim$y, stim$color, stim$duration, stim$responseWindow)
 
     if (.SimHRTEnv$type == "N") {
-        return(simH_RT.present(cdTodb(stim$level), .SimHRTEnv$cap, fpr, fnr, tt, -0.066, 2.81))
+        return(simH_RT.present(cdTodb(stim$level), .SimHRTEnv$cap, fpr, fnr, tt, dist, -0.066, 2.81))
     } else if (.SimHRTEnv$type == "G") {
-        return(simH_RT.present(cdTodb(stim$level), .SimHRTEnv$cap, fpr, fnr, tt, -0.098, 3.62))
+        return(simH_RT.present(cdTodb(stim$level), .SimHRTEnv$cap, fpr, fnr, tt, dist, -0.098, 3.62))
     } else if (.SimHRTEnv$type == "C") {
-        return(simH_RT.present(cdTodb(stim$level), .SimHRTEnv$cap, fpr, fnr, tt, -0.081, 3.27))
+        return(simH_RT.present(cdTodb(stim$level), .SimHRTEnv$cap, fpr, fnr, tt, dist, -0.081, 3.27))
     } else {
         return ( list(
             err = "Unknown error in opiPresent() for SimHensonRT",

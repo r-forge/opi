@@ -68,6 +68,21 @@ Note that if the stimulus value is less than zero, then the Henson
 formula is not used. The probability of seeing is \code{fpr}.
 }
 
+\subsection{SimHensonRT}{
+
+\code{opiPresent(stim, nextStim=NULL, fpr=0.03, fnr=0.01, tt=30, dist=stim$level - tt)}
+
+This presentation is the same as for \code{SimHenson}, but reaction
+times are determined by sampling from \code{rtData} as passed to
+\code{opiInitialize}.  The \code{dist} parameter is the distance
+of the stimulus level from the true threshold, and should be in the
+same units as the \code{Dist} column of \code{rtData}. The default
+is just the straight difference between the stimulus level and the
+true threshold, but you might want it scaled somehow to match
+\code{rtData}.
+
+}
+
 
 \subsection{SimGaussian}{
 
@@ -169,6 +184,18 @@ result <- opiPresent(stim=makeStim(10,0), tt=30, fpr=0.15, fnr=0.01)
 
     # Will not work as 'stim' is not named
 #result <- opiPresent(makeStim(10,0), tt=30, fpr=0.15, fnr=0.01)
+
+if (!is.null(opiClose()))
+    warning("opiClose() failed")
+
+    # Same but with simulated reaction times
+chooseOpi("SimHensonRT")
+data(RtSigmaUnits)
+if (!is.null(opiInitialize(type="C", cap=6, rtData=RtSigmaUnits)))
+    stop("opiInitialize failed")
+
+dist <- (10 - 30)/min(exp(-0.098 * 30 + 3.62), 6)
+result <- opiPresent(stim=makeStim(10,0), tt=30, fpr=0.15, fnr=0.01, dist=dist)
 
 if (!is.null(opiClose()))
     warning("opiClose() failed")
